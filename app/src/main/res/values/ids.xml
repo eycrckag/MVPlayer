@@ -2,4 +2,10 @@
 <resources>
     <item name="splash" type="id"/>
     <item name="settings" type="id"/>
+    <item name="tab_home" type="id"/>
+    <item name="tab_mv" type="id"/>
+    <item name="tab_vlist" type="id"/>
+    <item name="tab_mv_list" type="id"/>
+    <item name="fragment_container" type="id"/>
+    <item name="bottom_bar" type="id"/>
 </resources>

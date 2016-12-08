@@ -5,4 +5,8 @@
     <string name="mv">MV</string>
     <string name="vlist">V榜</string>
     <string name="mv_list">悦单</string>
+    <string name="clean_cache">清除缓存</string>
+    <string name="push_notification">推送通知</string>
+    <string name="none_wifi_load_images">非Wifi下加载图片</string>
+    <string name="about">关于</string>
 </resources>

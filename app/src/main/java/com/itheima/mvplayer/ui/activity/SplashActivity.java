@@ -1,6 +1,5 @@
-package com.itheima.mvplayer.ui;
+package com.itheima.mvplayer.ui.activity;
 
-import android.os.Bundle;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
@@ -8,7 +7,6 @@ import android.widget.ImageView;
 import com.itheima.mvplayer.R;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 
 public class SplashActivity extends BaseActivity {
     public static final String TAG = "SplashActivity";

@@ -8,4 +8,5 @@
     <item name="tab_mv_list" type="id"/>
     <item name="fragment_container" type="id"/>
     <item name="bottom_bar" type="id"/>
+    <item name="recycler_view" type="id"/>
 </resources>

@@ -1,7 +1,9 @@
 package com.itheima.mvplayer.presenter.impl;
 
+import com.itheima.mvplayer.model.NetworkManager;
 import com.itheima.mvplayer.presenter.HomePresenter;
 import com.itheima.mvplayer.view.HomeView;
+
 
 public class HomePresenterImpl implements HomePresenter {
     public static final String TAG = "HomePresenterImpl";
@@ -14,6 +16,7 @@ public class HomePresenterImpl implements HomePresenter {
 
     @Override
     public void loadHomeData() {
-
+        NetworkManager.getInstance().loadHomeData();
     }
+
 }

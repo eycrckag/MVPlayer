@@ -9,4 +9,8 @@
     <item name="fragment_container" type="id"/>
     <item name="bottom_bar" type="id"/>
     <item name="recycler_view" type="id"/>
+    <item name="video_type" type="id"/>
+    <item name="description" type="id"/>
+    <item name="swipe_refresh" type="id"/>
+    <item name="video" type="id"/>
 </resources>

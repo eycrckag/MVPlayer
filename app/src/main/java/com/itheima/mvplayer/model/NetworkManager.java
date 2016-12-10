@@ -40,28 +40,24 @@ public class NetworkManager {
         return mNetworkManager;
     }
 
-    public void loadHomeData() {
+    public void loadHomeData(final NetworkCallback callback) {
         Request request = new Request.Builder().get().url(URLProviderUtil.getHomeUrl(0, 10)).build();
         mOkHttpClient.newCall(request).enqueue(new Callback() {
 
             @Override
             public void onFailure(Call call, IOException e) {
-//                if (callback != null) {
-//                    callback.onError();
-//                }
+                if (callback != null) {
+                    callback.onError();
+                }
             }
-
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 String resultString = response.body().string();//Notice it not toString(), is string()
                 Log.d(TAG, "onResponse: " + resultString );
                 List<HomeItemBean> result = mGson.fromJson(resultString, new TypeToken<List<HomeItemBean>>(){}.getType());
-                for (int i = 0; i < result.size(); i++) {
-                    HomeItemBean homeItemBean = result.get(i);
-                    Log.d(TAG, "onResponse: " + homeItemBean.getTitle());
+                if (callback != null) {
+                    callback.onSuccess(result);
                 }
-//                if (callback != null) {
-//                }
             }
         });
     }

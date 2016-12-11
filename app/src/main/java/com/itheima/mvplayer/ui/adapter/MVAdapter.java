@@ -6,7 +6,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.util.Log;
 
 import com.itheima.mvplayer.model.AreaBean;
-import com.itheima.mvplayer.ui.fragment.MVItemFragment;
+import com.itheima.mvplayer.ui.fragment.MVPageFragment;
 
 import java.util.List;
 
@@ -27,7 +27,7 @@ public class MVAdapter extends FragmentStatePagerAdapter {
     @Override
     public Fragment getItem(int position) {
         Log.d(TAG, "getItem: " + position);
-        return MVItemFragment.newInstance(mAreas.get(position).getCode());
+        return MVPageFragment.newInstance(mAreas.get(position).getCode());
     }
 
     @Override

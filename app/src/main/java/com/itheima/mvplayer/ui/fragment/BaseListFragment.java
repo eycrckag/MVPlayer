@@ -74,7 +74,7 @@ public abstract class BaseListFragment extends BaseFragment implements BaseListV
     @Override
     public void onLoadListDataSuccess() {
         toast(R.string.load_data_success);
-        getListAdapter().notifyDataSetChanged();
+        mAdapter.notifyDataSetChanged();
         mSwipeRefresh.setRefreshing(false);
     }
 

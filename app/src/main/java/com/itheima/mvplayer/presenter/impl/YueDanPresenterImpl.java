@@ -2,13 +2,17 @@ package com.itheima.mvplayer.presenter.impl;
 
 import com.itheima.mvplayer.model.NetworkCallback;
 import com.itheima.mvplayer.model.NetworkManager;
+import com.itheima.mvplayer.model.YueDanBean;
 import com.itheima.mvplayer.presenter.YueDanPresenter;
 import com.itheima.mvplayer.view.YueDanView;
+
+import java.util.List;
 
 public class YueDanPresenterImpl implements YueDanPresenter {
     public static final String TAG = "YueDanPresenterImpl";
 
     private YueDanView mYueDanView;
+
 
     public YueDanPresenterImpl(YueDanView view) {
         mYueDanView = view;
@@ -37,5 +41,10 @@ public class YueDanPresenterImpl implements YueDanPresenter {
     @Override
     public void refresh() {
 
+    }
+
+    @Override
+    public List<YueDanBean.PlayListsBean> getPlayList() {
+        return null;
     }
 }

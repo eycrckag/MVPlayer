@@ -1,5 +1,9 @@
 package com.itheima.mvplayer.presenter;
 
+import com.itheima.mvplayer.model.YueDanBean;
+
+import java.util.List;
+
 public interface YueDanPresenter {
 
     void loadYueDanData();
@@ -8,4 +12,5 @@ public interface YueDanPresenter {
 
     void refresh();
 
+    List<YueDanBean.PlayListsBean> getPlayList();
 }

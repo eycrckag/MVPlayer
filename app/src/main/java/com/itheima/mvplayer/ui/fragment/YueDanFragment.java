@@ -35,6 +35,8 @@ public class YueDanFragment extends BaseFragment implements YueDanView {
         mYueDanPresenter = new YueDanPresenterImpl(this);
 
         initRecyclerView();
+        mSwipeRefresh.setColorSchemeResources(R.color.colorPrimary);
+        mSwipeRefresh.setOnRefreshListener(mOnRefreshListener);
 
         mYueDanPresenter.loadYueDanData();
     }
@@ -56,5 +58,13 @@ public class YueDanFragment extends BaseFragment implements YueDanView {
     public void onLoadYueDanDataSuccess() {
         toast(R.string.load_yue_dan_success);
         mYueDanListAdapter.notifyDataSetChanged();
+        mSwipeRefresh.setRefreshing(false);
     }
+
+    private SwipeRefreshLayout.OnRefreshListener mOnRefreshListener = new SwipeRefreshLayout.OnRefreshListener() {
+        @Override
+        public void onRefresh() {
+            mYueDanPresenter.refresh();
+        }
+    };
 }

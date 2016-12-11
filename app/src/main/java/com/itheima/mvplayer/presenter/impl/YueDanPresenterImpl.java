@@ -45,7 +45,8 @@ public class YueDanPresenterImpl implements YueDanPresenter {
 
     @Override
     public void refresh() {
-
+        mPlayListsBeanList.clear();
+        loadYueDanData();
     }
 
     @Override

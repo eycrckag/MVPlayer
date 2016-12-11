@@ -18,4 +18,8 @@
     <string name="load_yue_dan_success">加载悦单数据成功</string>
     <string name="load_more_yue_dan_data_failed">加载更多悦单数据失败</string>
     <string name="load_more_yue_dan_data_success">加载更多悦单数据成功</string>
+    <string name="load_data_success">加载数据成功</string>
+    <string name="load_data_failed">加载数据失败</string>
+    <string name="load_more_data_failed">加载更多数据失败</string>
+    <string name="load_more_data_success">加载更多数据成功</string>
 </resources>

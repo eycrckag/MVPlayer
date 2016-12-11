@@ -1,5 +1,7 @@
 package com.itheima.mvplayer.model;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -22,6 +24,7 @@ public class NetworkManager {
 
     private static NetworkManager mNetworkManager;
     private OkHttpClient mOkHttpClient;
+    private Handler mHandler = new Handler(Looper.getMainLooper());
 
     private NetworkManager() {
         mOkHttpClient = new OkHttpClient();
@@ -47,17 +50,27 @@ public class NetworkManager {
             @Override
             public void onFailure(Call call, IOException e) {
                 if (callback != null) {
-                    callback.onError();
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            callback.onError();
+                        }
+                    });
                 }
             }
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 String resultString = response.body().string();//Notice it not toString(), is string()
                 Log.d(TAG, "onResponse: " + resultString );
-                List<HomeItemBean> result = mGson.fromJson(resultString, new TypeToken<List<HomeItemBean>>(){}.getType());
-                if (callback != null) {
-                    callback.onSuccess(result);
-                }
+                final List<HomeItemBean> result = mGson.fromJson(resultString, new TypeToken<List<HomeItemBean>>(){}.getType());
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (callback != null) {
+                            callback.onSuccess(result);
+                        }
+                    }
+                });
             }
         });
     }

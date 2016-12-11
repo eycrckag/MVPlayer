@@ -6,8 +6,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import com.itheima.mvplayer.R;
+import android.widget.Toast;
 
 import butterknife.ButterKnife;
 
@@ -26,4 +25,8 @@ public abstract class BaseFragment extends Fragment {
     protected abstract int getLayoutResID();
 
     protected void init() {}
+
+    protected void toast(int resId) {
+        Toast.makeText(getContext(), getString(resId), Toast.LENGTH_SHORT).show();
+    }
 }

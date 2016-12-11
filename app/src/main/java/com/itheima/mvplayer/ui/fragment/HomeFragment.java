@@ -45,4 +45,14 @@ public class HomeFragment extends BaseFragment implements HomeView {
         mHomeListAdapter = new HomeListAdapter(getContext(), mHomePresenter.getHomeListItems());
         mRecyclerView.setAdapter(mHomeListAdapter);
     }
+
+    @Override
+    public void onLoadHomeDataFailed() {
+        toast(R.string.load_home_data_failed);
+    }
+
+    @Override
+    public void onLoadHomeDataSuccess() {
+        mHomeListAdapter.notifyDataSetChanged();
+    }
 }

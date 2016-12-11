@@ -9,7 +9,7 @@ import com.itheima.mvplayer.widget.HomeListItemView;
 
 import java.util.List;
 
-public class HomeListAdapter extends RecyclerView.Adapter {
+public class HomeListAdapter extends RecyclerView.Adapter<HomeListAdapter.HomeListItemViewHolder> {
     public static final String TAG = "HomeListAdapter";
 
     private Context mContext;
@@ -21,21 +21,21 @@ public class HomeListAdapter extends RecyclerView.Adapter {
     }
 
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public HomeListItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         return new HomeListItemViewHolder(new HomeListItemView(mContext));
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-
+    public void onBindViewHolder(HomeListItemViewHolder holder, int position) {
+        holder.mHomeListItemView.bindView(mHomeItemBeanList.get(position));
     }
 
     @Override
     public int getItemCount() {
-        return 30;
+        return mHomeItemBeanList.size();
     }
 
-    private class HomeListItemViewHolder extends RecyclerView.ViewHolder {
+    ;public class HomeListItemViewHolder extends RecyclerView.ViewHolder {
 
         private HomeListItemView mHomeListItemView;
 

@@ -81,10 +81,13 @@ public class NetworkManager {
         });
     }
 
+    public void loadYueData(NetworkCallback callback) {
+        loadYueData(0, callback);
+    }
 
-    public void loadYueData(final NetworkCallback callback) {
-        Request request = new Request.Builder().url(URLProviderUtil.getYueDanUrl(0, DEFAULT_PAGE_SIZE)).get().build();
-        Log.d(TAG, "loadYueData: " + URLProviderUtil.getYueDanUrl(0, DEFAULT_PAGE_SIZE));
+
+    public void loadYueData(int offset, final NetworkCallback callback) {
+        Request request = new Request.Builder().url(URLProviderUtil.getYueDanUrl(offset, DEFAULT_PAGE_SIZE)).get().build();
         mOkHttpClient.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(final Call call, IOException e) {
@@ -112,4 +115,5 @@ public class NetworkManager {
             }
         });
     }
+
 }

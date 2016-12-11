@@ -47,6 +47,7 @@ public class YueDanFragment extends BaseFragment implements YueDanView {
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
         mYueDanListAdapter = new YueDanListAdapter(getContext(), mYueDanPresenter.getPlayList());
         mRecyclerView.setAdapter(mYueDanListAdapter);
+        mRecyclerView.addOnScrollListener(mOnScrollListener);
     }
 
     @Override
@@ -61,10 +62,32 @@ public class YueDanFragment extends BaseFragment implements YueDanView {
         mSwipeRefresh.setRefreshing(false);
     }
 
+    @Override
+    public void onLoadMoreYueDanDataFailed() {
+        toast(R.string.load_more_yue_dan_data_failed);
+    }
+
+    @Override
+    public void onLoadMoreYueDanDataSuccess() {
+        toast(R.string.load_more_yue_dan_data_success);
+        mYueDanListAdapter.notifyDataSetChanged();
+    }
+
     private SwipeRefreshLayout.OnRefreshListener mOnRefreshListener = new SwipeRefreshLayout.OnRefreshListener() {
         @Override
         public void onRefresh() {
             mYueDanPresenter.refresh();
+        }
+    };
+
+    private RecyclerView.OnScrollListener mOnScrollListener = new RecyclerView.OnScrollListener() {
+        @Override
+        public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+            if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                if (mLinearLayoutManager.findLastVisibleItemPosition() == mYueDanPresenter.getPlayList().size() - 1) {
+                    mYueDanPresenter.loadMoreYueDanData();
+                }
+            }
         }
     };
 }

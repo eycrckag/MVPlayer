@@ -24,6 +24,10 @@ public class YueDanPresenterImpl implements YueDanPresenter {
 
     @Override
     public void loadYueDanData() {
+        if (mPlayListsBeanList.size() > 0) {
+            mYueDanView.onLoadMoreYueDanDataSuccess();
+            return;
+        }
         NetworkManager.getInstance().loadYueData(new NetworkCallback<YueDanBean>() {
             @Override
             public void onError() {
@@ -40,7 +44,18 @@ public class YueDanPresenterImpl implements YueDanPresenter {
 
     @Override
     public void loadMoreYueDanData() {
+        NetworkManager.getInstance().loadYueData(mPlayListsBeanList.size(), new NetworkCallback<YueDanBean>() {
+            @Override
+            public void onError() {
+                mYueDanView.onLoadMoreYueDanDataFailed();
+            }
 
+            @Override
+            public void onSuccess(YueDanBean result) {
+                mPlayListsBeanList.addAll(result.getPlayLists());
+                mYueDanView.onLoadMoreYueDanDataSuccess();
+            }
+        });
     }
 
     @Override

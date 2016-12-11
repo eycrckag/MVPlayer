@@ -58,7 +58,7 @@ public class HomePresenterImpl implements HomePresenter {
     @Override
     public void loadMoreHomeData() {
         if (mHasMoreData) {
-            NetworkManager.getInstance().loadHomeData(mHomeItemBeanList.size() + 1, new NetworkCallback<List<HomeItemBean>>() {
+            NetworkManager.getInstance().loadHomeData(mHomeItemBeanList.size(), new NetworkCallback<List<HomeItemBean>>() {
                 @Override
                 public void onError() {
                     mHomeView.onLoadMoreHomeDataFailed();

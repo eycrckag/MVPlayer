@@ -17,7 +17,7 @@ public class HomePresenterImpl implements HomePresenter {
 
     private List<HomeItemBean> mHomeItemBeanList;
 
-    private boolean mHasMoreData;
+    private boolean mHasMoreData = true;
 
     public HomePresenterImpl(HomeView homeView) {
         mHomeView = homeView;

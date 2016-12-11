@@ -43,7 +43,7 @@ public class YueDanFragment extends BaseFragment implements YueDanView {
         mRecyclerView.setHasFixedSize(true);
         mLinearLayoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
-        mYueDanListAdapter = new YueDanListAdapter(getContext(), null);
+        mYueDanListAdapter = new YueDanListAdapter(getContext(), mYueDanPresenter.getPlayList());
         mRecyclerView.setAdapter(mYueDanListAdapter);
     }
 
@@ -55,5 +55,6 @@ public class YueDanFragment extends BaseFragment implements YueDanView {
     @Override
     public void onLoadYueDanDataSuccess() {
         toast(R.string.load_yue_dan_success);
+        mYueDanListAdapter.notifyDataSetChanged();
     }
 }

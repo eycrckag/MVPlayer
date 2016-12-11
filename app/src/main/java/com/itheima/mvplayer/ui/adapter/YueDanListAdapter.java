@@ -9,7 +9,7 @@ import com.itheima.mvplayer.widget.YueDanListItemView;
 
 import java.util.List;
 
-public class YueDanListAdapter extends RecyclerView.Adapter {
+public class YueDanListAdapter extends RecyclerView.Adapter<YueDanListAdapter.YueDanListItemViewHolder> {
     public static final String TAG = "YueDanListAdapter";
 
     private Context mContext;
@@ -21,21 +21,21 @@ public class YueDanListAdapter extends RecyclerView.Adapter {
     }
 
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public YueDanListItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         return new YueDanListItemViewHolder(new YueDanListItemView(mContext));
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-
+    public void onBindViewHolder(YueDanListItemViewHolder holder, int position) {
+        holder.mYueDanListItemView.bindView(mPlayListsBean.get(position));
     }
 
     @Override
     public int getItemCount() {
-        return 30;
+        return mPlayListsBean.size();
     }
 
-    private class YueDanListItemViewHolder extends RecyclerView.ViewHolder {
+    public class YueDanListItemViewHolder extends RecyclerView.ViewHolder {
         private YueDanListItemView mYueDanListItemView;
 
         public YueDanListItemViewHolder(YueDanListItemView itemView) {

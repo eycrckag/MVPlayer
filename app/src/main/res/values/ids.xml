@@ -13,7 +13,9 @@
     <item name="description" type="id"/>
     <item name="swipe_refresh" type="id"/>
     <item name="video" type="id"/>
-    <item name="item_bg" type="id"/>
+    <item name="default_icon" type="id"/>
     <item name="nickname" type="id"/>
     <item name="mv_count" type="id"/>
+    <item name="avatar" type="id"/>
+    <item name="item_img" type="id"/>
 </resources>

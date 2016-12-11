@@ -6,6 +6,7 @@ import com.itheima.mvplayer.model.YueDanBean;
 import com.itheima.mvplayer.presenter.YueDanPresenter;
 import com.itheima.mvplayer.view.YueDanView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class YueDanPresenterImpl implements YueDanPresenter {
@@ -13,21 +14,25 @@ public class YueDanPresenterImpl implements YueDanPresenter {
 
     private YueDanView mYueDanView;
 
+    private List<YueDanBean.PlayListsBean> mPlayListsBeanList;
+
 
     public YueDanPresenterImpl(YueDanView view) {
         mYueDanView = view;
+        mPlayListsBeanList = new ArrayList<YueDanBean.PlayListsBean>();
     }
 
     @Override
     public void loadYueDanData() {
-        NetworkManager.getInstance().loadYueData(new NetworkCallback() {
+        NetworkManager.getInstance().loadYueData(new NetworkCallback<YueDanBean>() {
             @Override
             public void onError() {
                 mYueDanView.onLoadYueDanDataFailed();
             }
 
             @Override
-            public void onSuccess(Object result) {
+            public void onSuccess(YueDanBean result) {
+                mPlayListsBeanList.addAll(result.getPlayLists());
                 mYueDanView.onLoadYueDanDataSuccess();
             }
         });
@@ -45,6 +50,6 @@ public class YueDanPresenterImpl implements YueDanPresenter {
 
     @Override
     public List<YueDanBean.PlayListsBean> getPlayList() {
-        return null;
+        return mPlayListsBeanList;
     }
 }

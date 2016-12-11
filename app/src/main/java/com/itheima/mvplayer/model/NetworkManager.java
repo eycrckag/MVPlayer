@@ -100,13 +100,12 @@ public class NetworkManager {
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                YueDanBean yueDanBean = mGson.fromJson(response.body().string(), YueDanBean.class);
-                Log.d(TAG, "onResponse: " + yueDanBean.getTotalCount());
+                final YueDanBean yueDanBean = mGson.fromJson(response.body().string(), YueDanBean.class);
                 if (callback != null) {
                     mHandler.post(new Runnable() {
                         @Override
                         public void run() {
-//                            callback.onSuccess();
+                            callback.onSuccess(yueDanBean);
                         }
                     });
                 }

@@ -6,18 +6,22 @@ import com.itheima.mvplayer.network.NetworkListener;
 import com.itheima.mvplayer.presenter.BaseListPresenter;
 import com.itheima.mvplayer.view.BaseListView;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class MVPagePresenterImpl implements BaseListPresenter {
+public class MVPagePresenterImpl implements BaseListPresenter<MVPageBean.VideosBean> {
     public static final String TAG = "MVPagePresenterImpl";
 
     private String mCode;
     private BaseListView mMVPageView;
 
+    private List<MVPageBean.VideosBean> mVideos;
+
 
     public MVPagePresenterImpl(BaseListView view, String code) {
         mMVPageView = view;
         mCode = code;
+        mVideos = new ArrayList<MVPageBean.VideosBean>();
     }
 
     @Override
@@ -26,8 +30,8 @@ public class MVPagePresenterImpl implements BaseListPresenter {
     }
 
     @Override
-    public List getListData() {
-        return null;
+    public List<MVPageBean.VideosBean> getListData() {
+        return mVideos;
     }
 
     @Override

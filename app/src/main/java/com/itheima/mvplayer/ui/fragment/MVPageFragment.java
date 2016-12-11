@@ -6,11 +6,14 @@ import android.support.v7.widget.RecyclerView;
 
 import com.itheima.mvplayer.presenter.BaseListPresenter;
 import com.itheima.mvplayer.presenter.impl.MVPagePresenterImpl;
+import com.itheima.mvplayer.ui.adapter.MVPageListAdapter;
 import com.itheima.mvplayer.view.BaseListView;
 
 public class MVPageFragment extends BaseListFragment {
 
     private String mCode;
+
+    private MVPagePresenterImpl mMVPagePresenter;
 
     public static MVPageFragment newInstance(String code) {
         MVPageFragment itemFragment = new MVPageFragment();
@@ -29,11 +32,12 @@ public class MVPageFragment extends BaseListFragment {
 
     @Override
     public RecyclerView.Adapter getListAdapter() {
-        return null;
+        return new MVPageListAdapter(getContext(), mMVPagePresenter.getListData());
     }
 
     @Override
     public BaseListPresenter getPresenter(BaseListView view) {
-        return new MVPagePresenterImpl(view, mCode);
+        mMVPagePresenter = new MVPagePresenterImpl(view, mCode);
+        return mMVPagePresenter;
     }
 }

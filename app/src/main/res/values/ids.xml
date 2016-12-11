@@ -20,4 +20,5 @@
     <item name="item_img" type="id"/>
     <item name="tab_layout" type="id"/>
     <item name="view_pager" type="id"/>
+    <item name="artist" type="id"/>
 </resources>

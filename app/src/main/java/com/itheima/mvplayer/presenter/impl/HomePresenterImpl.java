@@ -24,6 +24,10 @@ public class HomePresenterImpl implements HomePresenter {
 
     @Override
     public void loadHomeData() {
+        if (mHomeItemBeanList.size() > 0) {
+            mHomeView.onLoadHomeDataSuccess();
+            return;
+        }
         NetworkManager.getInstance().loadHomeData(new NetworkCallback<List<HomeItemBean>>() {
             @Override
             public void onError() {

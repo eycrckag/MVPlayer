@@ -1,8 +1,8 @@
 package com.itheima.mvplayer.presenter.impl;
 
-import com.itheima.mvplayer.model.NetworkCallback;
-import com.itheima.mvplayer.model.NetworkManager;
 import com.itheima.mvplayer.model.YueDanBean;
+import com.itheima.mvplayer.network.NetworkListener;
+import com.itheima.mvplayer.network.YueDanRequest;
 import com.itheima.mvplayer.presenter.YueDanPresenter;
 import com.itheima.mvplayer.view.YueDanView;
 
@@ -28,35 +28,39 @@ public class YueDanPresenterImpl implements YueDanPresenter {
             mYueDanView.onLoadMoreYueDanDataSuccess();
             return;
         }
-        NetworkManager.getInstance().loadYueData(new NetworkCallback<YueDanBean>() {
-            @Override
-            public void onError() {
-                mYueDanView.onLoadYueDanDataFailed();
-            }
-
-            @Override
-            public void onSuccess(YueDanBean result) {
-                mPlayListsBeanList.addAll(result.getPlayLists());
-                mYueDanView.onLoadYueDanDataSuccess();
-            }
-        });
+        YueDanRequest.getRequest(mYueDanBeanNetworkListener).execute();
     }
+
+    private NetworkListener<YueDanBean> mYueDanBeanNetworkListener = new NetworkListener<YueDanBean>() {
+        @Override
+        public void onError(String errorMsg) {
+            mYueDanView.onLoadYueDanDataFailed();
+        }
+
+        @Override
+        public void onSuccess(YueDanBean result) {
+            mPlayListsBeanList.addAll(result.getPlayLists());
+            mYueDanView.onLoadYueDanDataSuccess();
+        }
+    };
 
     @Override
     public void loadMoreYueDanData() {
-        NetworkManager.getInstance().loadYueData(mPlayListsBeanList.size(), new NetworkCallback<YueDanBean>() {
-            @Override
-            public void onError() {
-                mYueDanView.onLoadMoreYueDanDataFailed();
-            }
-
-            @Override
-            public void onSuccess(YueDanBean result) {
-                mPlayListsBeanList.addAll(result.getPlayLists());
-                mYueDanView.onLoadMoreYueDanDataSuccess();
-            }
-        });
+        YueDanRequest.getLoadMoreRequest(mPlayListsBeanList.size(), mLoadMoreListener).execute();
     }
+
+    private NetworkListener<YueDanBean> mLoadMoreListener = new NetworkListener<YueDanBean>() {
+        @Override
+        public void onError(String errorMsg) {
+            mYueDanView.onLoadMoreYueDanDataFailed();
+        }
+
+        @Override
+        public void onSuccess(YueDanBean result) {
+            mPlayListsBeanList.addAll(result.getPlayLists());
+            mYueDanView.onLoadMoreYueDanDataSuccess();
+        }
+    };
 
     @Override
     public void refresh() {

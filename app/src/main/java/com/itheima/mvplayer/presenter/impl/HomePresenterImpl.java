@@ -1,8 +1,9 @@
 package com.itheima.mvplayer.presenter.impl;
 
 import com.itheima.mvplayer.model.HomeItemBean;
-import com.itheima.mvplayer.model.NetworkCallback;
-import com.itheima.mvplayer.model.NetworkManager;
+import com.itheima.mvplayer.network.HomeRequest;
+import com.itheima.mvplayer.network.MVPlayerRequest;
+import com.itheima.mvplayer.network.NetworkListener;
 import com.itheima.mvplayer.presenter.HomePresenter;
 import com.itheima.mvplayer.view.HomeView;
 
@@ -30,19 +31,21 @@ public class HomePresenterImpl implements HomePresenter {
             mHomeView.onLoadHomeDataSuccess();
             return;
         }
-        NetworkManager.getInstance().loadHomeData(new NetworkCallback<List<HomeItemBean>>() {
-            @Override
-            public void onError() {
-                mHomeView.onLoadHomeDataFailed();
-            }
-
-            @Override
-            public void onSuccess(List<HomeItemBean> result) {
-                mHomeItemBeanList.addAll(result);
-                mHomeView.onLoadHomeDataSuccess();
-            }
-        });
+        HomeRequest.getRequest(mListNetworkListener).execute();
     }
+
+    private NetworkListener<List<HomeItemBean>> mListNetworkListener = new NetworkListener<List<HomeItemBean>>() {
+        @Override
+        public void onError(String errorMsg) {
+            mHomeView.onLoadHomeDataFailed();
+        }
+
+        @Override
+        public void onSuccess(List<HomeItemBean> result) {
+            mHomeItemBeanList.addAll(result);
+            mHomeView.onLoadHomeDataSuccess();
+        }
+    };
 
     @Override
     public List<HomeItemBean> getHomeListItems() {
@@ -58,24 +61,25 @@ public class HomePresenterImpl implements HomePresenter {
     @Override
     public void loadMoreHomeData() {
         if (mHasMoreData) {
-            NetworkManager.getInstance().loadHomeData(mHomeItemBeanList.size(), new NetworkCallback<List<HomeItemBean>>() {
-                @Override
-                public void onError() {
-                    mHomeView.onLoadMoreHomeDataFailed();
-                }
-
-                @Override
-                public void onSuccess(List<HomeItemBean> result) {
-                    mHasMoreData = (result.size() == NetworkManager.DEFAULT_PAGE_SIZE);
-                    mHomeItemBeanList.addAll(result);
-                    mHomeView.onLoadMoreHomeDataSuccess();
-                }
-            });
+            HomeRequest.getLoadMoreRequest(mHomeItemBeanList.size(), mLoadMoreListener).execute();
         } else {
             mHomeView.onNoMoreData();
         }
 
     }
 
+    private NetworkListener<List<HomeItemBean>> mLoadMoreListener = new NetworkListener<List<HomeItemBean>>() {
+        @Override
+        public void onError(String errorMsg) {
+            mHomeView.onLoadMoreHomeDataFailed();
+        }
+
+        @Override
+        public void onSuccess(List<HomeItemBean> result) {
+            mHasMoreData = (result.size() == MVPlayerRequest.DEFAULT_PAGE_SIZE);
+            mHomeItemBeanList.addAll(result);
+            mHomeView.onLoadMoreHomeDataSuccess();
+        }
+    };
 
 }

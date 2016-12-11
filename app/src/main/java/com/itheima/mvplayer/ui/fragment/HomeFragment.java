@@ -90,4 +90,9 @@ public class HomeFragment extends BaseFragment implements HomeView {
         toast(R.string.load_more_home_data_success);
         mHomeListAdapter.notifyDataSetChanged();
     }
+
+    @Override
+    public void onNoMoreData() {
+        toast(R.string.no_more_data);
+    }
 }

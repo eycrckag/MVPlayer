@@ -26,7 +26,7 @@ public class NetworkManager {
     private OkHttpClient mOkHttpClient;
     private Handler mHandler = new Handler(Looper.getMainLooper());
 
-    private static final int DEFAULT_PAGE_SIZE = 10;
+    public static final int DEFAULT_PAGE_SIZE = 10;
 
     private NetworkManager() {
         mOkHttpClient = new OkHttpClient();

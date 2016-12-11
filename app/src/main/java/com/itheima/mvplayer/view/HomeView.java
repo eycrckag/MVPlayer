@@ -8,4 +8,6 @@ public interface HomeView {
     void onLoadMoreHomeDataFailed();
 
     void onLoadMoreHomeDataSuccess();
+
+    void onNoMoreData();
 }

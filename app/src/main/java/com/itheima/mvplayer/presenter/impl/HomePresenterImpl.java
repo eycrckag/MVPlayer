@@ -17,6 +17,8 @@ public class HomePresenterImpl implements HomePresenter {
 
     private List<HomeItemBean> mHomeItemBeanList;
 
+    private boolean mHasMoreData;
+
     public HomePresenterImpl(HomeView homeView) {
         mHomeView = homeView;
         mHomeItemBeanList = new ArrayList<HomeItemBean>();
@@ -55,18 +57,24 @@ public class HomePresenterImpl implements HomePresenter {
 
     @Override
     public void loadMoreHomeData() {
-        NetworkManager.getInstance().loadHomeData(mHomeItemBeanList.size() + 1, new NetworkCallback<List<HomeItemBean>>() {
-            @Override
-            public void onError() {
-                mHomeView.onLoadMoreHomeDataFailed();
-            }
+        if (mHasMoreData) {
+            NetworkManager.getInstance().loadHomeData(mHomeItemBeanList.size() + 1, new NetworkCallback<List<HomeItemBean>>() {
+                @Override
+                public void onError() {
+                    mHomeView.onLoadMoreHomeDataFailed();
+                }
 
-            @Override
-            public void onSuccess(List<HomeItemBean> result) {
-                mHomeItemBeanList.addAll(result);
-                mHomeView.onLoadMoreHomeDataSuccess();
-            }
-        });
+                @Override
+                public void onSuccess(List<HomeItemBean> result) {
+                    mHasMoreData = (result.size() == NetworkManager.DEFAULT_PAGE_SIZE);
+                    mHomeItemBeanList.addAll(result);
+                    mHomeView.onLoadMoreHomeDataSuccess();
+                }
+            });
+        } else {
+            mHomeView.onNoMoreData();
+        }
+
     }
 
 

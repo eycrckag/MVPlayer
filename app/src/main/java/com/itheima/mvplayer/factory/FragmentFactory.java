@@ -5,13 +5,8 @@ import android.support.v4.app.Fragment;
 import com.itheima.mvplayer.R;
 import com.itheima.mvplayer.ui.fragment.HomeFragment;
 import com.itheima.mvplayer.ui.fragment.MVFragment;
-import com.itheima.mvplayer.ui.fragment.MVListFragment;
+import com.itheima.mvplayer.ui.fragment.YueListFragment;
 import com.itheima.mvplayer.ui.fragment.VListFragment;
-
-import java.util.logging.MemoryHandler;
-
-import static android.icu.lang.UCharacter.GraphemeClusterBreak.V;
-import static android.os.Build.VERSION_CODES.M;
 
 public class FragmentFactory {
     public static final String TAG = "FragmentFactory";
@@ -20,7 +15,7 @@ public class FragmentFactory {
     private Fragment mHomeFragment;
     private Fragment mMVFragment;
     private Fragment mVListFragment;
-    private Fragment mMVListFragment;
+    private Fragment mYueListFragment;
 
     private FragmentFactory(){}
 
@@ -43,8 +38,8 @@ public class FragmentFactory {
                 return getMVFragment();
             case R.id.tab_vlist:
                 return getVListFragment();
-            case R.id.tab_mv_list:
-                return getMVListFragment();
+            case R.id.tab_yue_list:
+                return getYueListFragment();
         }
         return null;
     }
@@ -70,10 +65,10 @@ public class FragmentFactory {
         return mVListFragment;
     }
 
-    private Fragment getMVListFragment() {
-        if (mMVListFragment == null) {
-            mMVListFragment = new MVListFragment();
+    private Fragment getYueListFragment() {
+        if (mYueListFragment == null) {
+            mYueListFragment = new YueListFragment();
         }
-        return mMVListFragment;
+        return mYueListFragment;
     }
 }

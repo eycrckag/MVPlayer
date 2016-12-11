@@ -14,4 +14,6 @@
     <string name="load_more_home_data_failed">加载更多数据失败</string>
     <string name="load_more_home_data_success">加载更多数据成功</string>
     <string name="no_more_data">没有更多数据</string>
+    <string name="load_yue_dan_failed">加载悦单数据失败</string>
+    <string name="load_yue_dan_success">加载悦单数据成功</string>
 </resources>

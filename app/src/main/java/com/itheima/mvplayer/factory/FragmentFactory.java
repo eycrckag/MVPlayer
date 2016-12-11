@@ -5,7 +5,7 @@ import android.support.v4.app.Fragment;
 import com.itheima.mvplayer.R;
 import com.itheima.mvplayer.ui.fragment.HomeFragment;
 import com.itheima.mvplayer.ui.fragment.MVFragment;
-import com.itheima.mvplayer.ui.fragment.YueListFragment;
+import com.itheima.mvplayer.ui.fragment.YueDanFragment;
 import com.itheima.mvplayer.ui.fragment.VListFragment;
 
 public class FragmentFactory {
@@ -15,7 +15,7 @@ public class FragmentFactory {
     private Fragment mHomeFragment;
     private Fragment mMVFragment;
     private Fragment mVListFragment;
-    private Fragment mYueListFragment;
+    private Fragment mYueDanFragment;
 
     private FragmentFactory(){}
 
@@ -38,7 +38,7 @@ public class FragmentFactory {
                 return getMVFragment();
             case R.id.tab_vlist:
                 return getVListFragment();
-            case R.id.tab_yue_list:
+            case R.id.tab_yue_dan:
                 return getYueListFragment();
         }
         return null;
@@ -66,9 +66,9 @@ public class FragmentFactory {
     }
 
     private Fragment getYueListFragment() {
-        if (mYueListFragment == null) {
-            mYueListFragment = new YueListFragment();
+        if (mYueDanFragment == null) {
+            mYueDanFragment = new YueDanFragment();
         }
-        return mYueListFragment;
+        return mYueDanFragment;
     }
 }

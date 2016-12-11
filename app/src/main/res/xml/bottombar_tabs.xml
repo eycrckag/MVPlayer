@@ -17,7 +17,7 @@
         title="@string/vlist"
         barColorWhenSelected="@color/colorPrimary"/>
     <tab
-        id = "@id/tab_mv_list"
+        id = "@id/tab_yue_dan"
         icon="@mipmap/ic_bottom_mvlist_unselect"
         title="@string/mv_list"
         barColorWhenSelected="@color/colorPrimary"/>

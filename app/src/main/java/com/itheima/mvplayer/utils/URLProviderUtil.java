@@ -59,7 +59,7 @@ public class URLProviderUtil {
 				+ "&size="+size;
 		return url;
 	}
-	public static String getMainPageYueDanUrl(int offset,int size){
+	public static String getYueDanUrl(int offset,int size){
 		String url = "http://mapi.yinyuetai.com/playlist/list.json?deviceinfo="
 				+ "{\"aid\":\"10201036\",\"os\":\"Android\","
 				+ "\"ov\":"+"\""+ getSystemVersion() +"\""+","

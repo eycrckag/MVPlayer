@@ -39,7 +39,7 @@
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:text="天籁之音"
-            android:textColor="@android:color/white"
+            android:textColor="@color/green"
             android:textSize="18sp"/>
 
 

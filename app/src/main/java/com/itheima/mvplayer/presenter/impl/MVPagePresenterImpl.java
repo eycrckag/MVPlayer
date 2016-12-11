@@ -36,23 +36,24 @@ public class MVPagePresenterImpl implements BaseListPresenter<MVPageBean.VideosB
 
     @Override
     public void refresh() {
-
+        mVideos.clear();
+        MVPageRequest.getRequest(mCode,mNetworkListener).execute();
     }
 
     @Override
     public void loadMoreListData() {
-
     }
 
     private NetworkListener<MVPageBean> mNetworkListener = new NetworkListener<MVPageBean>() {
         @Override
         public void onError(String errorMsg) {
-
+            mMVPageView.onLoadListDataFailed();
         }
 
         @Override
         public void onSuccess(MVPageBean result) {
-
+            mVideos.addAll(result.getVideos());
+            mMVPageView.onLoadListDataSuccess();
         }
     };
 }

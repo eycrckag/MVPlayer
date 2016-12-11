@@ -9,7 +9,7 @@ import com.itheima.mvplayer.widget.MVPageListItemView;
 
 import java.util.List;
 
-public class MVPageListAdapter extends RecyclerView.Adapter {
+public class MVPageListAdapter extends RecyclerView.Adapter<MVPageListAdapter.MVPageListItemViewHolder> {
     public static final String TAG = "MVPageListAdapter";
 
     private Context mContext;
@@ -21,18 +21,18 @@ public class MVPageListAdapter extends RecyclerView.Adapter {
     }
 
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public MVPageListItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         return new MVPageListItemViewHolder(new MVPageListItemView(mContext));
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-
+    public void onBindViewHolder(MVPageListItemViewHolder holder, int position) {
+        holder.mMVPageListItemView.bindView(mVideos.get(position));
     }
 
     @Override
     public int getItemCount() {
-        return 30;
+        return mVideos.size();
     }
 
     public class MVPageListItemViewHolder extends RecyclerView.ViewHolder {

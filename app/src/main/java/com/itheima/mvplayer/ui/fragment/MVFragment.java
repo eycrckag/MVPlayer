@@ -45,6 +45,8 @@ public class MVFragment extends BaseFragment implements MVView{
     @Override
     public void onLoadAreaSuccess() {
         toast(R.string.load_data_success);
+
+
         mMVAdapter.notifyDataSetChanged();
     }
 }

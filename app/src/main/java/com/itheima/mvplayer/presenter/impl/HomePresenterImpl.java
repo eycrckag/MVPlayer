@@ -43,4 +43,11 @@ public class HomePresenterImpl implements HomePresenter {
         return mHomeItemBeanList;
     }
 
+    @Override
+    public void refresh() {
+        mHomeItemBeanList.clear();
+        loadHomeData();
+    }
+
+
 }

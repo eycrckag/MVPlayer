@@ -35,6 +35,8 @@ public class HomeFragment extends BaseFragment implements HomeView {
         mHomePresenter = new HomePresenterImpl(this);
 
         initRecyclerView();
+        mSwipeRefresh.setColorSchemeResources(R.color.colorPrimary);
+        mSwipeRefresh.setOnRefreshListener(mOnRefreshListener);
 
         mHomePresenter.loadHomeData();
     }
@@ -53,6 +55,15 @@ public class HomeFragment extends BaseFragment implements HomeView {
 
     @Override
     public void onLoadHomeDataSuccess() {
+        toast(R.string.load_home_data_success);
         mHomeListAdapter.notifyDataSetChanged();
+        mSwipeRefresh.setRefreshing(false);
     }
+
+    private SwipeRefreshLayout.OnRefreshListener mOnRefreshListener = new SwipeRefreshLayout.OnRefreshListener() {
+        @Override
+        public void onRefresh() {
+            mHomePresenter.refresh();
+        }
+    };
 }

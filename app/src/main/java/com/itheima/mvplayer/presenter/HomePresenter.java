@@ -8,4 +8,6 @@ public interface HomePresenter {
     void loadHomeData();
 
     List<HomeItemBean> getHomeListItems();
+
+    void refresh();
 }

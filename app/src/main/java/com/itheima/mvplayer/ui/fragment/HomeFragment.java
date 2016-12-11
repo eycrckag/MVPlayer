@@ -19,8 +19,8 @@ public class HomeFragment extends BaseFragment implements HomeView {
     @BindView(R.id.swipe_refresh)
     SwipeRefreshLayout mSwipeRefresh;
 
+    private LinearLayoutManager mLinearLayoutManager;
     private HomeListAdapter mHomeListAdapter;
-
 
     private HomePresenter mHomePresenter;
 
@@ -37,15 +37,16 @@ public class HomeFragment extends BaseFragment implements HomeView {
         initRecyclerView();
         mSwipeRefresh.setColorSchemeResources(R.color.colorPrimary);
         mSwipeRefresh.setOnRefreshListener(mOnRefreshListener);
-
         mHomePresenter.loadHomeData();
     }
 
     private void initRecyclerView() {
         mRecyclerView.setHasFixedSize(true);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        mLinearLayoutManager = new LinearLayoutManager(getContext());
+        mRecyclerView.setLayoutManager(mLinearLayoutManager);
         mHomeListAdapter = new HomeListAdapter(getContext(), mHomePresenter.getHomeListItems());
         mRecyclerView.setAdapter(mHomeListAdapter);
+        mRecyclerView.addOnScrollListener(mOnScrollListener);
     }
 
     @Override
@@ -66,4 +67,27 @@ public class HomeFragment extends BaseFragment implements HomeView {
             mHomePresenter.refresh();
         }
     };
+
+
+    private RecyclerView.OnScrollListener mOnScrollListener = new RecyclerView.OnScrollListener() {
+        @Override
+        public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+            if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                if (mLinearLayoutManager.findLastVisibleItemPosition() == mHomePresenter.getHomeListItems().size() - 1) {
+                    mHomePresenter.loadMoreHomeData();
+                }
+            }
+        }
+    };
+
+    @Override
+    public void onLoadMoreHomeDataFailed() {
+        toast(R.string.load_more_home_data_failed);
+    }
+
+    @Override
+    public void onLoadMoreHomeDataSuccess() {
+        toast(R.string.load_more_home_data_success);
+        mHomeListAdapter.notifyDataSetChanged();
+    }
 }

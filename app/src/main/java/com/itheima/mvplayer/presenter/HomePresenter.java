@@ -10,4 +10,6 @@ public interface HomePresenter {
     List<HomeItemBean> getHomeListItems();
 
     void refresh();
+
+    void loadMoreHomeData();
 }

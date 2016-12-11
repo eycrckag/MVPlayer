@@ -26,6 +26,8 @@ public class NetworkManager {
     private OkHttpClient mOkHttpClient;
     private Handler mHandler = new Handler(Looper.getMainLooper());
 
+    private static final int DEFAULT_PAGE_SIZE = 10;
+
     private NetworkManager() {
         mOkHttpClient = new OkHttpClient();
         mGson = new Gson();
@@ -43,8 +45,12 @@ public class NetworkManager {
         return mNetworkManager;
     }
 
-    public void loadHomeData(final NetworkCallback callback) {
-        Request request = new Request.Builder().get().url(URLProviderUtil.getHomeUrl(0, 10)).build();
+    public void loadHomeData(NetworkCallback callback) {
+        loadHomeData(0, callback);
+    }
+
+    public void loadHomeData(int offset, final NetworkCallback callback) {
+        Request request = new Request.Builder().get().url(URLProviderUtil.getHomeUrl(offset, DEFAULT_PAGE_SIZE)).build();
         mOkHttpClient.newCall(request).enqueue(new Callback() {
 
             @Override

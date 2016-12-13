@@ -1,10 +1,14 @@
 package com.itheima.mvplayer.ui.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 import android.view.ViewGroup;
 
+import com.itheima.mvplayer.app.Constant;
 import com.itheima.mvplayer.model.HomeItemBean;
+import com.itheima.mvplayer.ui.activity.PlayerActivity;
 import com.itheima.mvplayer.widget.HomeListItemView;
 
 import java.util.List;
@@ -27,7 +31,17 @@ public class HomeListAdapter extends RecyclerView.Adapter<HomeListAdapter.HomeLi
 
     @Override
     public void onBindViewHolder(HomeListItemViewHolder holder, int position) {
-        holder.mHomeListItemView.bindView(mHomeItemBeanList.get(position));
+        final HomeItemBean homeItemBean = mHomeItemBeanList.get(position);
+        holder.mHomeListItemView.bindView(homeItemBean);
+        holder.mHomeListItemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(mContext, PlayerActivity.class);
+                intent.putExtra(Constant.Extra.VIDEO_URL, homeItemBean.getUrl());
+                intent.putExtra(Constant.Extra.VIDEO_TITLE, homeItemBean.getTitle());
+                mContext.startActivity(intent);
+            }
+        });
     }
 
     @Override

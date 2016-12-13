@@ -21,4 +21,8 @@
     <item name="tab_layout" type="id"/>
     <item name="view_pager" type="id"/>
     <item name="artist" type="id"/>
+    <item name="comment" type="id"/>
+    <item name="relative" type="id"/>
+    <item name="radio_group" type="id"/>
+    <item name="video_player" type="id"/>
 </resources>

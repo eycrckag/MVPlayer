@@ -9,8 +9,8 @@ import com.itheima.mvplayer.app.Constant;
 import butterknife.BindView;
 import fm.jiecao.jcvideoplayer_lib.JCVideoPlayer;
 
-public class PlayerActivity extends BaseActivity {
-    public static final String TAG = "PlayerActivity";
+public class MVPlayerActivity extends BaseActivity {
+    public static final String TAG = "MVPlayerActivity";
     @BindView(R.id.description)
     RadioButton mDescription;
     @BindView(R.id.comment)

@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 
 import com.itheima.mvplayer.app.Constant;
 import com.itheima.mvplayer.model.HomeItemBean;
-import com.itheima.mvplayer.ui.activity.PlayerActivity;
+import com.itheima.mvplayer.ui.activity.MVPlayerActivity;
 import com.itheima.mvplayer.widget.HomeListItemView;
 
 import java.util.List;
@@ -36,7 +36,7 @@ public class HomeListAdapter extends RecyclerView.Adapter<HomeListAdapter.HomeLi
         holder.mHomeListItemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(mContext, PlayerActivity.class);
+                Intent intent = new Intent(mContext, MVPlayerActivity.class);
                 intent.putExtra(Constant.Extra.VIDEO_URL, homeItemBean.getUrl());
                 intent.putExtra(Constant.Extra.VIDEO_TITLE, homeItemBean.getTitle());
                 mContext.startActivity(intent);

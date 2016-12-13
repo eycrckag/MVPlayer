@@ -28,4 +28,6 @@
     <item name="list_view" type="id"/>
     <item name="audio_default" type="id"/>
     <item name="size" type="id"/>
+    <item name="seek_bar" type="id"/>
+    <item name="time" type="id"/>
 </resources>

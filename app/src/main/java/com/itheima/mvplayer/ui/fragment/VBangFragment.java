@@ -1,14 +1,18 @@
 package com.itheima.mvplayer.ui.fragment;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.itheima.mvplayer.R;
+import com.itheima.mvplayer.ui.activity.AudioPlayerActivity;
 import com.itheima.mvplayer.ui.adapter.AudioListAdapter;
 import com.itheima.mvplayer.utils.AudioAsyncQueryHandler;
 
@@ -30,6 +34,7 @@ public class VBangFragment extends BaseFragment {
         super.init();
         mAudioListAdapter = new AudioListAdapter(getContext(), null, false);
         mListView.setAdapter(mAudioListAdapter);
+        mListView.setOnItemClickListener(mOnItemClickListener);
         if (hasReadExternalStoragePermission()) {
             loadAudio();
         } else {
@@ -77,5 +82,13 @@ public class VBangFragment extends BaseFragment {
                 break;
         }
     }
+
+    private AdapterView.OnItemClickListener mOnItemClickListener = new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            Intent intent = new Intent(getContext(), AudioPlayerActivity.class);
+            startActivity(intent);
+        }
+    };
 
 }

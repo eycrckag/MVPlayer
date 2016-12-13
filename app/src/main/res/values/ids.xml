@@ -26,4 +26,6 @@
     <item name="radio_group" type="id"/>
     <item name="video_player" type="id"/>
     <item name="list_view" type="id"/>
+    <item name="audio_default" type="id"/>
+    <item name="size" type="id"/>
 </resources>

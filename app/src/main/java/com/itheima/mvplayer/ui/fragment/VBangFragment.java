@@ -9,6 +9,7 @@ import android.support.v4.app.ActivityCompat;
 import android.widget.ListView;
 
 import com.itheima.mvplayer.R;
+import com.itheima.mvplayer.ui.adapter.AudioListAdapter;
 import com.itheima.mvplayer.utils.AudioAsyncQueryHandler;
 
 import butterknife.BindView;
@@ -17,6 +18,7 @@ public class VBangFragment extends BaseFragment {
     public static final String TAG = "VBangFragment";
     @BindView(R.id.list_view)
     ListView mListView;
+    private AudioListAdapter mAudioListAdapter;
 
     @Override
     protected int getLayoutResID() {
@@ -26,6 +28,8 @@ public class VBangFragment extends BaseFragment {
     @Override
     protected void init() {
         super.init();
+        mAudioListAdapter = new AudioListAdapter(getContext(), null, false);
+        mListView.setAdapter(mAudioListAdapter);
         if (hasReadExternalStoragePermission()) {
             loadAudio();
         } else {
@@ -58,7 +62,7 @@ public class VBangFragment extends BaseFragment {
                 MediaStore.Audio.Media.DURATION,
                 MediaStore.Audio.Media.SIZE};
         AudioAsyncQueryHandler audioAsyncQueryHandler = new AudioAsyncQueryHandler(getContext().getContentResolver());
-        audioAsyncQueryHandler.startQuery(0, null, uri, projection, null, null, null);
+        audioAsyncQueryHandler.startQuery(0, mAudioListAdapter, uri, projection, null, null, null);
     }
 
     @Override
@@ -73,4 +77,5 @@ public class VBangFragment extends BaseFragment {
                 break;
         }
     }
+
 }

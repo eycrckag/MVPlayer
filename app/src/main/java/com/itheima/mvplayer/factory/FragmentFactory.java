@@ -5,8 +5,8 @@ import android.support.v4.app.Fragment;
 import com.itheima.mvplayer.R;
 import com.itheima.mvplayer.ui.fragment.HomeFragment;
 import com.itheima.mvplayer.ui.fragment.MVFragment;
+import com.itheima.mvplayer.ui.fragment.VBangFragment;
 import com.itheima.mvplayer.ui.fragment.YueDanFragment;
-import com.itheima.mvplayer.ui.fragment.VListFragment;
 
 public class FragmentFactory {
     public static final String TAG = "FragmentFactory";
@@ -60,7 +60,7 @@ public class FragmentFactory {
 
     private Fragment getVListFragment() {
        if (mVListFragment == null) {
-            mVListFragment = new VListFragment();
+            mVListFragment = new VBangFragment();
         }
         return mVListFragment;
     }

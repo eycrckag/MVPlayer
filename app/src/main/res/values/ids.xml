@@ -25,4 +25,5 @@
     <item name="relative" type="id"/>
     <item name="radio_group" type="id"/>
     <item name="video_player" type="id"/>
+    <item name="list_view" type="id"/>
 </resources>

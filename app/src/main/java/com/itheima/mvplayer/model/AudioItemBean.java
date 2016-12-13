@@ -13,7 +13,7 @@ public class AudioItemBean {
 
     public static AudioItemBean from(Cursor cursor) {
         AudioItemBean audioItemBean = new AudioItemBean();
-        audioItemBean.title = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DISPLAY_NAME));
+        audioItemBean.title = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.TITLE));
         audioItemBean.artist = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST));
         audioItemBean.size = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.SIZE));
         audioItemBean.duration = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DURATION));

@@ -119,8 +119,16 @@ public class AudioPlayService extends Service {
             startPlay();
         }
 
-        public int  getCurrentPosition() {
+        public int getCurrentPosition() {
             return mPosition;
+        }
+
+        public int getProgress() {
+            return mMediaPlayer.getCurrentPosition();
+        }
+
+        public int getDuration() {
+            return mMediaPlayer.getDuration();
         }
     }
 

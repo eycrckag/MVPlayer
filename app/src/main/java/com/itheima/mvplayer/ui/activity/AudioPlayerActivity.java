@@ -45,7 +45,7 @@ public class AudioPlayerActivity extends BaseActivity {
     @BindView(R.id.iv_next)
     ImageView mIvNext;
 
-    private static final int DEFAULT_DELAY = 1000;
+    private static final int DEFAULT_DELAY = 500;
 
     private AudioPlayService.AudioPlayerProxy mAudioPlayerProxy;
     private Handler mHandler = new Handler();
@@ -104,21 +104,22 @@ public class AudioPlayerActivity extends BaseActivity {
         mTvTitle.setText(audioItem.getTitle());
         mTvArtist.setText(audioItem.getArtist());
         updateStartPlay();
-        startUpdateProgress(audioItem.getDuration());
+        startUpdateProgress();
     }
 
-    private void startUpdateProgress(int duration) {
-        String time = "00:00" + "/" + StringUtils.formatDuration(duration);
-        mTime.setText(time);
-/*        mHandler.postDelayed(new Runnable() {
+    private void startUpdateProgress() {
+        if (mAudioPlayerProxy != null) {
+            int progress = mAudioPlayerProxy.getProgress();
+            int duration = mAudioPlayerProxy.getDuration();
+            String time = StringUtils.formatDuration(progress) + "/" + StringUtils.formatDuration(duration);
+            mTime.setText(time);
+        }
+        mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                updateProgress();
+                startUpdateProgress();
             }
-        }, DEFAULT_DELAY);*/
-    }
-
-    private void updateProgress() {
+        }, DEFAULT_DELAY);
     }
 
 

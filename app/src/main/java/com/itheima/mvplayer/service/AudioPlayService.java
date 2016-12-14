@@ -68,6 +68,7 @@ public class AudioPlayService extends Service {
 
     private void notifyStartPlay() {
         Intent intent = new Intent(ACTION_START_PLAY);
+        intent.putExtra(Constant.Extra.AUDIO_POSITION, mPosition);
         sendBroadcast(intent);
     }
 
@@ -84,6 +85,15 @@ public class AudioPlayService extends Service {
 
         public boolean isPlaying() {
             return mMediaPlayer.isPlaying();
+        }
+
+        public void playNext() {
+            mPosition ++;
+            startPlay();
+        }
+
+        public boolean isLast() {
+            return mPosition == AudioManager.getInstance().getAudioCount() - 1;
         }
     }
 

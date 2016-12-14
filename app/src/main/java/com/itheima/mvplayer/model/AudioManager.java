@@ -52,4 +52,8 @@ public class AudioManager {
     public AudioItemBean getAudioItem(int position) {
         return mAudioAsyncQueryHandler.getAudioItemBeanList().get(position);
     }
+
+    public int getAudioCount() {
+        return mAudioAsyncQueryHandler.getAudioItemBeanList().size();
+    }
 }

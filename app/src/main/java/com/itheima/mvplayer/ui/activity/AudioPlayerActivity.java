@@ -82,7 +82,8 @@ public class AudioPlayerActivity extends BaseActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals(AudioPlayService.ACTION_START_PLAY)) {
-                updateStartPlay();
+                int pos = intent.getIntExtra(Constant.Extra.AUDIO_POSITION, -1);
+                updateStartPlay(pos);
             }
         }
     };
@@ -91,6 +92,13 @@ public class AudioPlayerActivity extends BaseActivity {
         AnimationDrawable animation = (AnimationDrawable) mIvAnimation.getBackground();
         animation.start();
         mIvPlay.setBackgroundResource(R.drawable.selector_btn_audio_play);
+    }
+
+    private void updateStartPlay(int pos) {
+        AudioItemBean audioItem = AudioManager.getInstance().getAudioItem(pos);
+        mTvTitle.setText(audioItem.getTitle());
+        mTvArtist.setText(audioItem.getArtist());
+        updateStartPlay();
     }
 
 
@@ -122,6 +130,7 @@ public class AudioPlayerActivity extends BaseActivity {
             case R.id.iv_play_mode:
                 break;
             case R.id.iv_pre:
+
                 break;
             case R.id.iv_play:
                 mAudioPlayerProxy.togglePlay();
@@ -132,6 +141,11 @@ public class AudioPlayerActivity extends BaseActivity {
                 }
                 break;
             case R.id.iv_next:
+                if (mAudioPlayerProxy.isLast()) {
+                    toast(R.string.is_last_audio);
+                } else {
+                    mAudioPlayerProxy.playNext();
+                }
                 break;
             case R.id.audio_list:
                 finish();

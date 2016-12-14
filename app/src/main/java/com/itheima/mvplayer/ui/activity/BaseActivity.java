@@ -1,13 +1,10 @@
 package com.itheima.mvplayer.ui.activity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-
-import java.util.TreeMap;
+import android.widget.Toast;
 
 import butterknife.ButterKnife;
 
@@ -36,5 +33,9 @@ public abstract class BaseActivity extends AppCompatActivity {
         if (finish) {
             finish();
         }
+    }
+
+    protected void toast(int resId) {
+        Toast.makeText(this, getString(resId), Toast.LENGTH_SHORT).show();
     }
 }

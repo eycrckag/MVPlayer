@@ -6,7 +6,6 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import butterknife.ButterKnife;
 
@@ -27,6 +26,6 @@ public abstract class BaseFragment extends Fragment {
     protected void init() {}
 
     protected void toast(int resId) {
-        Toast.makeText(getContext(), getString(resId), Toast.LENGTH_SHORT).show();
+//        Toast.makeText(getContext(), getString(resId), Toast.LENGTH_SHORT).show();
     }
 }

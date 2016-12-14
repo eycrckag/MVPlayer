@@ -136,6 +136,7 @@ public class LyricView extends View {
             @Override
             public void run() {
                 mLyrics = LyricParser.parseLyric(lyricFilePath);
+                postInvalidate();
             }
         }).start();
     }

@@ -9,7 +9,6 @@ import android.content.ServiceConnection;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Handler;
 import android.os.IBinder;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.SeekBar;
@@ -74,11 +73,6 @@ public class AudioPlayerActivity extends BaseActivity {
         AudioItemBean itemBean = AudioManager.getInstance().getAudioItem(position);
         mTvTitle.setText(itemBean.getTitle());
         mTvArtist.setText(itemBean.getArtist());
-
-        String directory = "/storage/sdcard0/Download/audio/";
-        String lyricPath = directory + itemBean.getDisplayName().split("\\.")[0] + ".lrc" ;
-        Log.d(TAG, "initView: " + lyricPath);
-        mLyricView.setLyricFilePath(lyricPath);
         mSeekBar.setOnSeekBarChangeListener(mOnSeekBarChangeListener);
     }
 
@@ -131,10 +125,15 @@ public class AudioPlayerActivity extends BaseActivity {
         mSeekBar.setMax(audioItem.getDuration());
         updateStartPlay();
         startUpdateProgress();
+
+        String directory = "/storage/sdcard0/Download/audio/";
+        String lyricPath = directory + audioItem.getDisplayName().split("\\.")[0] + ".lrc" ;
+        mLyricView.setLyricFilePath(lyricPath);
         startUpdateLyric();
     }
 
     private void startUpdateLyric() {
+
         mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {

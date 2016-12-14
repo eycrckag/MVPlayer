@@ -209,11 +209,12 @@ public class AudioPlayerActivity extends BaseActivity {
 
         @Override
         public void onStartTrackingTouch(SeekBar seekBar) {
+            mAudioPlayerProxy.pause();
         }
 
         @Override
         public void onStopTrackingTouch(SeekBar seekBar) {
-
+            mAudioPlayerProxy.start();
         }
     };
 }

@@ -134,6 +134,14 @@ public class AudioPlayService extends Service {
         public void seekTo(int progress) {
             mMediaPlayer.seekTo(progress);
         }
+
+        public void pause() {
+            mMediaPlayer.pause();
+        }
+
+        public void start() {
+            mMediaPlayer.start();
+        }
     }
 
 }

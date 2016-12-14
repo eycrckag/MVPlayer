@@ -81,18 +81,31 @@ public class AudioPlayerActivity extends BaseActivity {
     private void registerBroadcast() {
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(AudioPlayService.ACTION_START_PLAY);
+        intentFilter.addAction(AudioPlayService.ACTION_COMPLETE_PLAY);
         registerReceiver(mUpdateReceiver, intentFilter);
     }
 
     private BroadcastReceiver mUpdateReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (intent.getAction().equals(AudioPlayService.ACTION_START_PLAY)) {
+            String action = intent.getAction();
+            if (action.equals(AudioPlayService.ACTION_START_PLAY)) {
                 int pos = intent.getIntExtra(Constant.Extra.AUDIO_POSITION, -1);
                 updateStartPlay(pos);
+            } else if (action.equals(AudioPlayService.ACTION_COMPLETE_PLAY)) {
+                stopUpdateProgress();
+                updateCompletePlay();
             }
         }
     };
+
+    private void updateCompletePlay() {
+        AnimationDrawable animation = (AnimationDrawable) mIvAnimation.getBackground();
+        animation.stop();
+        mIvPlay.setBackgroundResource(R.drawable.selector_btn_audio_pause);
+        String time = StringUtils.formatDuration(mAudioPlayerProxy.getDuration()) + "/" + StringUtils.formatDuration(mAudioPlayerProxy.getDuration());
+        mTime.setText(time);
+    }
 
     private void updateStartPlay() {
         AnimationDrawable animation = (AnimationDrawable) mIvAnimation.getBackground();
@@ -113,6 +126,9 @@ public class AudioPlayerActivity extends BaseActivity {
         if (mAudioPlayerProxy != null) {
             int progress = mAudioPlayerProxy.getProgress();
             int duration = mAudioPlayerProxy.getDuration();
+            if (progress > duration) {
+                progress = duration;
+            }
             String time = StringUtils.formatDuration(progress) + "/" + StringUtils.formatDuration(duration);
             mTime.setText(time);
             mSeekBar.setProgress(mAudioPlayerProxy.getProgress());
@@ -123,6 +139,10 @@ public class AudioPlayerActivity extends BaseActivity {
                 startUpdateProgress();
             }
         }, DEFAULT_DELAY);
+    }
+
+    private void stopUpdateProgress() {
+        mHandler.removeCallbacksAndMessages(null);
     }
 
 

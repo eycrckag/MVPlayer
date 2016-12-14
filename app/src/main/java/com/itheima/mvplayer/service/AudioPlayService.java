@@ -19,6 +19,8 @@ public class AudioPlayService extends Service {
     private int mPosition;
 
     public static final String ACTION_START_PLAY = "start";
+    public static final String ACTION_COMPLETE_PLAY = "complete";
+
 
     private static final int PLAY_MODE_ORDER = 1;
     private static final int PLAY_MODE_RANDOM = 2;
@@ -76,9 +78,14 @@ public class AudioPlayService extends Service {
     private MediaPlayer.OnCompletionListener mOnCompletionListener = new MediaPlayer.OnCompletionListener() {
         @Override
         public void onCompletion(MediaPlayer mp) {
-
+            notifyCompletePlay();
         }
     };
+
+    private void notifyCompletePlay() {
+        Intent intent = new Intent(ACTION_COMPLETE_PLAY);
+        sendBroadcast(intent);
+    }
 
     private void notifyStartPlay() {
         Intent intent = new Intent(ACTION_START_PLAY);

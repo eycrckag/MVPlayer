@@ -3,6 +3,7 @@ package com.itheima.mvplayer.ui.fragment;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -12,6 +13,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.itheima.mvplayer.R;
+import com.itheima.mvplayer.app.Constant;
 import com.itheima.mvplayer.ui.activity.AudioPlayerActivity;
 import com.itheima.mvplayer.ui.adapter.AudioListAdapter;
 import com.itheima.mvplayer.utils.AudioAsyncQueryHandler;
@@ -87,6 +89,9 @@ public class VBangFragment extends BaseFragment {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             Intent intent = new Intent(getContext(), AudioPlayerActivity.class);
+            Cursor cursor = (Cursor) mAudioListAdapter.getItem(position);
+            String string = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATA));
+            intent.putExtra(Constant.Extra.AUDIO_PATH, string);
             startActivity(intent);
         }
     };

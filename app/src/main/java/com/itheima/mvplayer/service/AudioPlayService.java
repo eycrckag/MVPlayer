@@ -20,6 +20,12 @@ public class AudioPlayService extends Service {
 
     public static final String ACTION_START_PLAY = "start";
 
+    private static final int PLAY_MODE_ORDER = 1;
+    private static final int PLAY_MODE_RANDOM = 2;
+    private static final int PLAY_MODE_SINGLE = 3;
+
+    private int mCurrentMode = PLAY_MODE_ORDER;
+
 
     @Nullable
     @Override
@@ -52,6 +58,7 @@ public class AudioPlayService extends Service {
         try {
             mMediaPlayer.setDataSource(path);
             mMediaPlayer.setOnPreparedListener(mOnPreparedListener);
+            mMediaPlayer.setOnCompletionListener(mOnCompletionListener);
             mMediaPlayer.prepare();
         } catch (IOException e) {
             e.printStackTrace();
@@ -63,6 +70,13 @@ public class AudioPlayService extends Service {
         public void onPrepared(MediaPlayer mp) {
             mMediaPlayer.start();
             notifyStartPlay();
+        }
+    };
+
+    private MediaPlayer.OnCompletionListener mOnCompletionListener = new MediaPlayer.OnCompletionListener() {
+        @Override
+        public void onCompletion(MediaPlayer mp) {
+
         }
     };
 
@@ -103,6 +117,10 @@ public class AudioPlayService extends Service {
         public void playPre() {
             mPosition --;
             startPlay();
+        }
+
+        public int  getCurrentPosition() {
+            return mPosition;
         }
     }
 

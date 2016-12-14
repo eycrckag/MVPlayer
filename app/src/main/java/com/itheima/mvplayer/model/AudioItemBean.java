@@ -9,7 +9,7 @@ public class AudioItemBean {
     private String title;
     private String artist;
     private String size;
-    private String duration;
+    private int duration;
     private String data;
 
     public static AudioItemBean from(Cursor cursor) {
@@ -17,7 +17,7 @@ public class AudioItemBean {
         audioItemBean.title = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.TITLE));
         audioItemBean.artist = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST));
         audioItemBean.size = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.SIZE));
-        audioItemBean.duration = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DURATION));
+        audioItemBean.duration = cursor.getInt(cursor.getColumnIndex(MediaStore.Audio.Media.DURATION));
         audioItemBean.data = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATA));
         return audioItemBean;
     }
@@ -46,11 +46,11 @@ public class AudioItemBean {
         this.size = size;
     }
 
-    public String getDuration() {
+    public int getDuration() {
         return duration;
     }
 
-    public void setDuration(String duration) {
+    public void setDuration(int duration) {
         this.duration = duration;
     }
 

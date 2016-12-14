@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.graphics.drawable.AnimationDrawable;
+import android.os.Handler;
 import android.os.IBinder;
 import android.view.View;
 import android.widget.ImageView;
@@ -18,6 +19,7 @@ import com.itheima.mvplayer.app.Constant;
 import com.itheima.mvplayer.model.AudioItemBean;
 import com.itheima.mvplayer.model.AudioManager;
 import com.itheima.mvplayer.service.AudioPlayService;
+import com.itheima.mvplayer.utils.StringUtils;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -43,7 +45,10 @@ public class AudioPlayerActivity extends BaseActivity {
     @BindView(R.id.iv_next)
     ImageView mIvNext;
 
+    private static final int DEFAULT_DELAY = 1000;
+
     private AudioPlayService.AudioPlayerProxy mAudioPlayerProxy;
+    private Handler mHandler = new Handler();
 
     @Override
     public int getLayoutResID() {
@@ -99,6 +104,21 @@ public class AudioPlayerActivity extends BaseActivity {
         mTvTitle.setText(audioItem.getTitle());
         mTvArtist.setText(audioItem.getArtist());
         updateStartPlay();
+        startUpdateProgress(audioItem.getDuration());
+    }
+
+    private void startUpdateProgress(int duration) {
+        String time = "00:00" + "/" + StringUtils.formatDuration(duration);
+        mTime.setText(time);
+/*        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                updateProgress();
+            }
+        }, DEFAULT_DELAY);*/
+    }
+
+    private void updateProgress() {
     }
 
 

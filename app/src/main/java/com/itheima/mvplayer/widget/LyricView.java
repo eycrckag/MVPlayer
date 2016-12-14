@@ -18,6 +18,16 @@ public class LyricView extends View {
 
     private float mCenterX;
     private float mCenterY;
+    private float mLineHeight;
+
+    private float mHighLightPosition = 1;
+
+    private float mHighLightTextSize;
+    private float mNormalTextSize;
+
+    private static final int DEFAULT_DELAY = 1000;
+
+    private String[] mMultipleLyrics = {"啦", "啦啦", "啦啦啦"};
 
     public LyricView(Context context) {
         this(context, null);
@@ -29,11 +39,14 @@ public class LyricView extends View {
     }
 
     private void init() {
+        mHighLightTextSize = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 16, getResources().getDisplayMetrics());
+        mNormalTextSize = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 14, getResources().getDisplayMetrics());
+
         mPaint = new Paint();
         mPaint.setAntiAlias(true);
-        mPaint.setTextSize(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 18, getResources().getDisplayMetrics()));
-        mPaint.setColor(Color.WHITE);
+        mPaint.setTextSize(mHighLightTextSize);
         mTextRect = new Rect();
+        mLineHeight = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 20, getResources().getDisplayMetrics());
     }
 
     @Override
@@ -44,7 +57,24 @@ public class LyricView extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        drawSingleLine(canvas);
+        //        drawSingleLine(canvas);
+        for (int i = 0; i < mMultipleLyrics.length; i++) {
+            //Init paint first, then measure text size
+            if (mHighLightPosition == i) {
+                mPaint.setColor(Color.GREEN);
+                mPaint.setTextSize(mHighLightTextSize);
+            } else {
+                mPaint.setColor(Color.WHITE);
+                mPaint.setTextSize(mNormalTextSize);
+            }
+            String text = mMultipleLyrics[i];
+            mPaint.getTextBounds(text, 0, text.length(), mTextRect);
+            float x = mCenterX - mTextRect.width() / 2;
+            float y = mCenterY + mTextRect.height() / 2 + (i - mHighLightPosition) * mLineHeight;
+
+            canvas.drawText(text, x, y, mPaint);
+        }
+
     }
 
     private void drawSingleLine(Canvas canvas) {
@@ -53,5 +83,37 @@ public class LyricView extends View {
         float x = mCenterX - mTextRect.width() / 2;
         float y = mCenterY + mTextRect.height() / 2;
         canvas.drawText(loadingText, x, y, mPaint);
+    }
+
+
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        startScrollLyric();
+    }
+
+    private void startScrollLyric() {
+        postDelayed(mTicker, DEFAULT_DELAY);
+
+    }
+
+    private Runnable mTicker = new Runnable() {
+
+        @Override
+        public void run() {
+            mHighLightPosition = (++mHighLightPosition) % mMultipleLyrics.length;
+            invalidate();
+            startScrollLyric();
+        }
+    };
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        stopScrollLyric();
+    }
+
+    private void stopScrollLyric() {
+        removeCallbacks(mTicker);
     }
 }

@@ -45,8 +45,13 @@ public class AudioPlayService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        mPosition = intent.getIntExtra(Constant.Extra.AUDIO_POSITION, -1);
-        startPlay();
+        int position = intent.getIntExtra(Constant.Extra.AUDIO_POSITION, -1);
+        if (mPosition == position) {
+            notifyStartPlay();
+        } else {
+            mPosition = position;
+            startPlay();
+        }
         return super.onStartCommand(intent, flags, startId);
     }
 

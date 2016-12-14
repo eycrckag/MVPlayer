@@ -9,6 +9,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class LyricParser {
@@ -48,6 +50,12 @@ public class LyricParser {
             e.printStackTrace();
         }
 
+        Collections.sort(lyricBeanList, new Comparator<LyricBean>() {
+            @Override
+            public int compare(LyricBean o1, LyricBean o2) {
+                return o1.getTimestamp() - o2.getTimestamp();
+            }
+        });
         return lyricBeanList;
     }
 

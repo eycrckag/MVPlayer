@@ -45,12 +45,14 @@ public class AudioPlayService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        int position = intent.getIntExtra(Constant.Extra.AUDIO_POSITION, -1);
-        if (mPosition == position) {
-            notifyStartPlay();
-        } else {
-            mPosition = position;
-            startPlay();
+        if (intent != null) {
+            int position = intent.getIntExtra(Constant.Extra.AUDIO_POSITION, -1);
+            if (mPosition == position) {
+                notifyStartPlay();
+            } else {
+                mPosition = position;
+                startPlay();
+            }
         }
         return super.onStartCommand(intent, flags, startId);
     }
@@ -151,16 +153,18 @@ public class AudioPlayService extends Service {
             startPlay();
         }
 
-        public int getCurrentPosition() {
-            return mPosition;
-        }
-
         public int getProgress() {
-            return mMediaPlayer.getCurrentPosition();
+            if (mMediaPlayer != null) {
+                return mMediaPlayer.getCurrentPosition();
+            }
+            return 0;
         }
 
         public int getDuration() {
-            return mMediaPlayer.getDuration();
+            if (mMediaPlayer != null) {
+                return mMediaPlayer.getDuration();
+            }
+            return 0;
         }
 
         public void seekTo(int progress) {

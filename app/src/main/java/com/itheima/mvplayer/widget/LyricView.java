@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 
@@ -24,7 +25,7 @@ public class LyricView extends View {
     private float mCenterY;
     private float mLineHeight;
 
-    private float mHighLightPosition = 1;
+    private float mHighLightPosition = 0;
 
     private float mHighLightTextSize;
     private float mNormalTextSize;
@@ -130,39 +131,6 @@ public class LyricView extends View {
     }
 
 
-    @Override
-    protected void onAttachedToWindow() {
-        super.onAttachedToWindow();
-        startScrollLyric();
-    }
-
-    private void startScrollLyric() {
-        postDelayed(mTicker, DEFAULT_DELAY);
-
-    }
-
-    private Runnable mTicker = new Runnable() {
-
-        @Override
-        public void run() {
-            if (mLyrics != null) {
-                mHighLightPosition = (++mHighLightPosition) % mLyrics.size();
-                invalidate();
-                startScrollLyric();
-            }
-        }
-    };
-
-    @Override
-    protected void onDetachedFromWindow() {
-        super.onDetachedFromWindow();
-        stopScrollLyric();
-    }
-
-    private void stopScrollLyric() {
-        removeCallbacks(mTicker);
-    }
-
     public void setLyricFilePath(final String lyricFilePath) {
         new Thread(new Runnable() {
             @Override
@@ -170,5 +138,24 @@ public class LyricView extends View {
                 mLyrics = LyricParser.parseLyric(lyricFilePath);
             }
         }).start();
+    }
+
+    public void roll(int progress, int duration) {
+        Log.d(TAG, "roll: " + progress);
+        for (int i = 0; i < mLyrics.size(); i++) {
+            int start = mLyrics.get(i).getTimestamp();
+            int end = 0;
+            if (i == mLyrics.size() - 1) {
+                end = duration;
+            } else {
+                end = mLyrics.get(i + 1).getTimestamp();
+            }
+
+            if (progress > start && progress <= end) {
+                mHighLightPosition = i;
+                invalidate();
+                break;
+            }
+        }
     }
 }

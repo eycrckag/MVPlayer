@@ -51,6 +51,7 @@ public class AudioPlayerActivity extends BaseActivity {
     LyricView mLyricView;
 
     private static final int DEFAULT_DELAY = 500;
+    private static final int UPDATE_LYRIC_INTERVAL = 100;
 
     private AudioPlayService.AudioPlayerProxy mAudioPlayerProxy;
     private Handler mHandler = new Handler();
@@ -130,6 +131,19 @@ public class AudioPlayerActivity extends BaseActivity {
         mSeekBar.setMax(audioItem.getDuration());
         updateStartPlay();
         startUpdateProgress();
+        startUpdateLyric();
+    }
+
+    private void startUpdateLyric() {
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (mAudioPlayerProxy != null) {
+                    mLyricView.roll(mAudioPlayerProxy.getProgress(), mAudioPlayerProxy.getDuration());
+                    startUpdateLyric();
+                }
+            }
+        }, UPDATE_LYRIC_INTERVAL);
     }
 
     private void startUpdateProgress() {
@@ -167,6 +181,7 @@ public class AudioPlayerActivity extends BaseActivity {
     protected void onPause() {
         super.onPause();
         unbindService(mServiceConnection);
+        stopUpdateProgress();
     }
 
     @Override

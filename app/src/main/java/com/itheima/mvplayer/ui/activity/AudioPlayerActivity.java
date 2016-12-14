@@ -172,6 +172,18 @@ public class AudioPlayerActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.iv_play_mode:
+                mAudioPlayerProxy.updatePlayMode();
+                switch (mAudioPlayerProxy.getPlayMode()) {
+                    case AudioPlayService.PLAY_MODE_ORDER:
+                        mIvPlayMode.setBackgroundResource(R.drawable.selector_btn_playmode_order);
+                        break;
+                    case AudioPlayService.PLAY_MODE_RANDOM:
+                        mIvPlayMode.setBackgroundResource(R.drawable.selector_btn_playmode_random);
+                        break;
+                    case AudioPlayService.PLAY_MODE_SINGLE:
+                        mIvPlayMode.setBackgroundResource(R.drawable.selector_btn_playmode_single);
+                        break;
+                }
                 break;
             case R.id.iv_pre:
                 if (mAudioPlayerProxy.isFirst()) {

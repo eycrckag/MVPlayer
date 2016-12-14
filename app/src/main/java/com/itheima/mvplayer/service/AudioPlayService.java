@@ -22,9 +22,9 @@ public class AudioPlayService extends Service {
     public static final String ACTION_COMPLETE_PLAY = "complete";
 
 
-    private static final int PLAY_MODE_ORDER = 1;
-    private static final int PLAY_MODE_RANDOM = 2;
-    private static final int PLAY_MODE_SINGLE = 3;
+    public static final int PLAY_MODE_ORDER = 0;
+    public static final int PLAY_MODE_RANDOM = 1;
+    public static final int PLAY_MODE_SINGLE = 2;
 
     private int mCurrentMode = PLAY_MODE_ORDER;
 
@@ -79,8 +79,20 @@ public class AudioPlayService extends Service {
         @Override
         public void onCompletion(MediaPlayer mp) {
             notifyCompletePlay();
+            playByMode();
         }
     };
+
+    private void playByMode() {
+        switch (mCurrentMode) {
+            case PLAY_MODE_ORDER:
+                break;
+            case PLAY_MODE_RANDOM:
+                break;
+            case PLAY_MODE_SINGLE:
+                break;
+        }
+    }
 
     private void notifyCompletePlay() {
         Intent intent = new Intent(ACTION_COMPLETE_PLAY);
@@ -95,6 +107,8 @@ public class AudioPlayService extends Service {
 
 
     public class AudioPlayerProxy extends Binder {
+
+        private int mCurrentMode;
 
         public void togglePlay() {
             if (mMediaPlayer.isPlaying()) {
@@ -148,6 +162,14 @@ public class AudioPlayService extends Service {
 
         public void start() {
             mMediaPlayer.start();
+        }
+
+        public void updatePlayMode() {
+            mCurrentMode = (mCurrentMode + 1) % 3;
+        }
+
+        public int getPlayMode() {
+            return mCurrentMode;
         }
     }
 

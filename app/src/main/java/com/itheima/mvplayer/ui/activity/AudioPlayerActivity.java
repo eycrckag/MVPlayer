@@ -9,6 +9,7 @@ import android.content.ServiceConnection;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Handler;
 import android.os.IBinder;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.SeekBar;
@@ -20,6 +21,7 @@ import com.itheima.mvplayer.model.AudioItemBean;
 import com.itheima.mvplayer.model.AudioManager;
 import com.itheima.mvplayer.service.AudioPlayService;
 import com.itheima.mvplayer.utils.StringUtils;
+import com.itheima.mvplayer.widget.LyricView;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -45,6 +47,9 @@ public class AudioPlayerActivity extends BaseActivity {
     @BindView(R.id.iv_next)
     ImageView mIvNext;
 
+    @BindView(R.id.lyric)
+    LyricView mLyricView;
+
     private static final int DEFAULT_DELAY = 500;
 
     private AudioPlayService.AudioPlayerProxy mAudioPlayerProxy;
@@ -68,6 +73,11 @@ public class AudioPlayerActivity extends BaseActivity {
         AudioItemBean itemBean = AudioManager.getInstance().getAudioItem(position);
         mTvTitle.setText(itemBean.getTitle());
         mTvArtist.setText(itemBean.getArtist());
+
+        String directory = "/storage/sdcard0/Download/audio/";
+        String lyricPath = directory + itemBean.getDisplayName().split("\\.")[0] + ".lrc" ;
+        Log.d(TAG, "initView: " + lyricPath);
+        mLyricView.setLyricFilePath(lyricPath);
         mSeekBar.setOnSeekBarChangeListener(mOnSeekBarChangeListener);
     }
 

@@ -10,6 +10,10 @@ import android.util.TypedValue;
 import android.view.View;
 
 import com.itheima.mvplayer.R;
+import com.itheima.mvplayer.model.LyricBean;
+import com.itheima.mvplayer.utils.LyricParser;
+
+import java.util.List;
 
 public class LyricView extends View {
     public static final String TAG = "LyricView";
@@ -28,6 +32,8 @@ public class LyricView extends View {
     private static final int DEFAULT_DELAY = 1000;
 
     private String[] mMultipleLyrics = {"啦", "啦啦", "啦啦啦"};
+
+    private List<LyricBean> mLyrics;
 
     public LyricView(Context context) {
         this(context, null);
@@ -57,7 +63,46 @@ public class LyricView extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        //        drawSingleLine(canvas);
+        if (mLyrics == null) {
+            drawLoadingText(canvas);
+        } else if (mLyrics.size() == 0) {
+            drawLyricNotFound(canvas);
+        } else {
+            drawLyrics(canvas);
+        }
+
+    }
+
+    private void drawLyrics(Canvas canvas) {
+        for (int i = 0; i < mLyrics.size(); i++) {
+            //Init paint first, then measure text size
+            if (mHighLightPosition == i) {
+                mPaint.setColor(Color.GREEN);
+                mPaint.setTextSize(mHighLightTextSize);
+            } else {
+                mPaint.setColor(Color.WHITE);
+                mPaint.setTextSize(mNormalTextSize);
+            }
+            String text = mLyrics.get(i).getLyric();
+            mPaint.getTextBounds(text, 0, text.length(), mTextRect);
+            float x = mCenterX - mTextRect.width() / 2;
+            float y = mCenterY + mTextRect.height() / 2 + (i - mHighLightPosition) * mLineHeight;
+
+            canvas.drawText(text, x, y, mPaint);
+        }
+    }
+
+    private void drawLyricNotFound(Canvas canvas) {
+        String lyricNotFound = getResources().getString(R.string.lyric_not_found);
+        drawSingleLine(canvas, lyricNotFound);
+    }
+
+    private void drawLoadingText(Canvas canvas) {
+        String loadingText = getResources().getString(R.string.loading_lyric);
+        drawSingleLine(canvas, loadingText);
+    }
+
+    private void drawMultipleLines(Canvas canvas) {
         for (int i = 0; i < mMultipleLyrics.length; i++) {
             //Init paint first, then measure text size
             if (mHighLightPosition == i) {
@@ -74,15 +119,14 @@ public class LyricView extends View {
 
             canvas.drawText(text, x, y, mPaint);
         }
-
     }
 
-    private void drawSingleLine(Canvas canvas) {
-        String loadingText = getResources().getString(R.string.loading_lyric);
-        mPaint.getTextBounds(loadingText, 0, loadingText.length(), mTextRect);
+    private void drawSingleLine(Canvas canvas, String text) {
+        mPaint.getTextBounds(text, 0, text.length(), mTextRect);
+        mPaint.setColor(Color.WHITE);
         float x = mCenterX - mTextRect.width() / 2;
         float y = mCenterY + mTextRect.height() / 2;
-        canvas.drawText(loadingText, x, y, mPaint);
+        canvas.drawText(text, x, y, mPaint);
     }
 
 
@@ -115,5 +159,14 @@ public class LyricView extends View {
 
     private void stopScrollLyric() {
         removeCallbacks(mTicker);
+    }
+
+    public void setLyricFilePath(final String lyricFilePath) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                mLyrics = LyricParser.parseLyric(lyricFilePath);
+            }
+        }).start();
     }
 }

@@ -32,4 +32,5 @@
     <item name="time" type="id"/>
     <item name="back" type="id"/>
     <item name="audio_list" type="id"/>
+    <item name="lyric" type="id"/>
 </resources>

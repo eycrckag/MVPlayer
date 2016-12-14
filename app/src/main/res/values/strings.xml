@@ -26,4 +26,5 @@
     <string name="is_last_audio">已经是最后一首歌啦</string>
     <string name="is_first_audio">已经是第一首歌啦</string>
     <string name="loading_lyric">玩命加载中&#8230;</string>
+    <string name="lyric_not_found">亲，歌词没找到</string>
 </resources>

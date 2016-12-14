@@ -44,7 +44,8 @@ public class AudioManager {
                 MediaStore.Audio.Media.TITLE,
                 MediaStore.Audio.Media.ARTIST,
                 MediaStore.Audio.Media.DURATION,
-                MediaStore.Audio.Media.SIZE};
+                MediaStore.Audio.Media.SIZE,
+                MediaStore.Audio.Media.DISPLAY_NAME};
         mAudioAsyncQueryHandler = new AudioAsyncQueryHandler(context.getContentResolver());
         mAudioAsyncQueryHandler.startQuery(0, cursorAdapter, uri, projection, null, null, null);
     }

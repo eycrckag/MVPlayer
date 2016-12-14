@@ -145,9 +145,11 @@ public class LyricView extends View {
 
         @Override
         public void run() {
-            mHighLightPosition = (++mHighLightPosition) % mMultipleLyrics.length;
-            invalidate();
-            startScrollLyric();
+            if (mLyrics != null) {
+                mHighLightPosition = (++mHighLightPosition) % mLyrics.size();
+                invalidate();
+                startScrollLyric();
+            }
         }
     };
 

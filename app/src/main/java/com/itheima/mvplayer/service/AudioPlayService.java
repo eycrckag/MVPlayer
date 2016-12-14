@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.itheima.mvplayer.app.Constant;
+import com.itheima.mvplayer.model.AudioManager;
 
 import java.io.IOException;
 
@@ -26,7 +27,8 @@ public class AudioPlayService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         mMediaPlayer = new MediaPlayer();
-        String path = intent.getStringExtra(Constant.Extra.AUDIO_PATH);
+        int position = intent.getIntExtra(Constant.Extra.AUDIO_POSITION, -1);
+        String path = AudioManager.getInstance().getAudioItem(position).getData();
         try {
             Log.d(TAG, "init: audio path " + path);
             mMediaPlayer.setDataSource(path);

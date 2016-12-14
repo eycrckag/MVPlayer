@@ -62,6 +62,7 @@
             android:background="@drawable/selector_btn_audio_next" />
 
         <ImageView
+            android:id="@id/audio_list"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"

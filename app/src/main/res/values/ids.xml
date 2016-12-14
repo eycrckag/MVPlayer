@@ -30,4 +30,6 @@
     <item name="size" type="id"/>
     <item name="seek_bar" type="id"/>
     <item name="time" type="id"/>
+    <item name="back" type="id"/>
+    <item name="audio_list" type="id"/>
 </resources>

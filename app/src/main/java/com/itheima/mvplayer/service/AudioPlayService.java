@@ -74,6 +74,17 @@ public class AudioPlayService extends Service {
 
     public class AudioPlayerProxy extends Binder {
 
+        public void togglePlay() {
+            if (mMediaPlayer.isPlaying()) {
+                mMediaPlayer.pause();
+            } else {
+                mMediaPlayer.start();
+            }
+        }
+
+        public boolean isPlaying() {
+            return mMediaPlayer.isPlaying();
+        }
     }
 
 }

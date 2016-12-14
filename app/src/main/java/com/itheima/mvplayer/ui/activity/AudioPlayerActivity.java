@@ -90,6 +90,7 @@ public class AudioPlayerActivity extends BaseActivity {
     private void updateStartPlay() {
         AnimationDrawable animation = (AnimationDrawable) mIvAnimation.getBackground();
         animation.start();
+        mIvPlay.setBackgroundResource(R.drawable.selector_btn_audio_play);
     }
 
 
@@ -123,6 +124,12 @@ public class AudioPlayerActivity extends BaseActivity {
             case R.id.iv_pre:
                 break;
             case R.id.iv_play:
+                mAudioPlayerProxy.togglePlay();
+                if (mAudioPlayerProxy.isPlaying()) {
+                    updateStartPlay();
+                }  else {
+                    updatePausePlay();
+                }
                 break;
             case R.id.iv_next:
                 break;
@@ -130,6 +137,12 @@ public class AudioPlayerActivity extends BaseActivity {
                 finish();
                 break;
         }
+    }
+
+    private void updatePausePlay() {
+        AnimationDrawable animationDrawable = (AnimationDrawable) mIvAnimation.getBackground();
+        animationDrawable.stop();
+        mIvPlay.setBackgroundResource(R.drawable.selector_btn_audio_pause);
     }
 
     private ServiceConnection mServiceConnection = new ServiceConnection() {
@@ -140,7 +153,7 @@ public class AudioPlayerActivity extends BaseActivity {
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
-
+            mAudioPlayerProxy = null;
         }
     };
 }

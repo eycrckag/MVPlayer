@@ -95,6 +95,15 @@ public class AudioPlayService extends Service {
         public boolean isLast() {
             return mPosition == AudioManager.getInstance().getAudioCount() - 1;
         }
+
+        public boolean isFirst() {
+            return mPosition == 0;
+        }
+
+        public void playPre() {
+            mPosition --;
+            startPlay();
+        }
     }
 
 }

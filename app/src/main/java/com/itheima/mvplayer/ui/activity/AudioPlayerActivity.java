@@ -130,7 +130,11 @@ public class AudioPlayerActivity extends BaseActivity {
             case R.id.iv_play_mode:
                 break;
             case R.id.iv_pre:
-
+                if (mAudioPlayerProxy.isFirst()) {
+                    toast(R.string.is_first_audio);
+                } else {
+                    mAudioPlayerProxy.playPre();
+                }
                 break;
             case R.id.iv_play:
                 mAudioPlayerProxy.togglePlay();

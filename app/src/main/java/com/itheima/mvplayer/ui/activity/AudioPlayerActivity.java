@@ -165,7 +165,7 @@ public class AudioPlayerActivity extends BaseActivity {
         unregisterReceiver(mUpdateReceiver);
     }
 
-    @OnClick({R.id.iv_play_mode, R.id.iv_pre, R.id.iv_play, R.id.iv_next, R.id.back})
+    @OnClick({R.id.iv_play_mode, R.id.iv_pre, R.id.iv_play, R.id.iv_next, R.id.back, R.id.audio_list})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.back:

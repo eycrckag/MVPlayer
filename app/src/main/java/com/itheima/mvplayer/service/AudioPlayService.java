@@ -6,11 +6,13 @@ import android.media.MediaPlayer;
 import android.os.Binder;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.itheima.mvplayer.app.Constant;
 import com.itheima.mvplayer.model.AudioManager;
 
 import java.io.IOException;
+import java.util.Random;
 
 public class AudioPlayService extends Service {
     public static final String TAG = "AudioPlayService";
@@ -84,14 +86,19 @@ public class AudioPlayService extends Service {
     };
 
     private void playByMode() {
+        int count = AudioManager.getInstance().getAudioCount();
         switch (mCurrentMode) {
             case PLAY_MODE_ORDER:
+                mPosition = (mPosition + 1) % count;
                 break;
             case PLAY_MODE_RANDOM:
+                mPosition = new Random().nextInt(count);
                 break;
             case PLAY_MODE_SINGLE:
                 break;
         }
+        Log.d(TAG, "playByMode: mode" + mCurrentMode + " position " + mPosition);
+        startPlay();
     }
 
     private void notifyCompletePlay() {
@@ -108,7 +115,6 @@ public class AudioPlayService extends Service {
 
     public class AudioPlayerProxy extends Binder {
 
-        private int mCurrentMode;
 
         public void togglePlay() {
             if (mMediaPlayer.isPlaying()) {

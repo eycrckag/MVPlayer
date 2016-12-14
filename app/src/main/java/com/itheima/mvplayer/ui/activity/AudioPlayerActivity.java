@@ -1,6 +1,13 @@
 package com.itheima.mvplayer.ui.activity;
 
+import android.content.BroadcastReceiver;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.ServiceConnection;
+import android.graphics.drawable.AnimationDrawable;
+import android.os.IBinder;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.SeekBar;
@@ -36,6 +43,8 @@ public class AudioPlayerActivity extends BaseActivity {
     @BindView(R.id.iv_next)
     ImageView mIvNext;
 
+    private AudioPlayService.AudioPlayerProxy mAudioPlayerProxy;
+
     @Override
     public int getLayoutResID() {
         return R.layout.activity_audio_player;
@@ -44,11 +53,16 @@ public class AudioPlayerActivity extends BaseActivity {
     @Override
     protected void init() {
         super.init();
+        initView();
+        registerBroadcast();
+        startService();
+    }
+
+    private void initView() {
         int position = getIntent().getIntExtra(Constant.Extra.AUDIO_POSITION, -1);
         AudioItemBean itemBean = AudioManager.getInstance().getAudioItem(position);
         mTvTitle.setText(itemBean.getTitle());
         mTvArtist.setText(itemBean.getArtist());
-        startService();
     }
 
     private void startService() {
@@ -57,9 +71,53 @@ public class AudioPlayerActivity extends BaseActivity {
         startService(intent);
     }
 
+
+    private void registerBroadcast() {
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(AudioPlayService.ACTION_START_PLAY);
+        registerReceiver(mUpdateReceiver, intentFilter);
+    }
+
+    private BroadcastReceiver mUpdateReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals(AudioPlayService.ACTION_START_PLAY)) {
+                updateStartPlay();
+            }
+        }
+    };
+
+    private void updateStartPlay() {
+        AnimationDrawable animation = (AnimationDrawable) mIvAnimation.getBackground();
+        animation.start();
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Intent intent = new Intent(this, AudioPlayService.class);
+        bindService(intent, mServiceConnection, BIND_AUTO_CREATE);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unbindService(mServiceConnection);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(mUpdateReceiver);
+    }
+
     @OnClick({R.id.iv_play_mode, R.id.iv_pre, R.id.iv_play, R.id.iv_next, R.id.back})
     public void onClick(View view) {
         switch (view.getId()) {
+            case R.id.back:
+                finish();
+                break;
             case R.id.iv_play_mode:
                 break;
             case R.id.iv_pre:
@@ -69,7 +127,20 @@ public class AudioPlayerActivity extends BaseActivity {
             case R.id.iv_next:
                 break;
             case R.id.audio_list:
+                finish();
                 break;
         }
     }
+
+    private ServiceConnection mServiceConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            mAudioPlayerProxy = (AudioPlayService.AudioPlayerProxy) service;
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+
+        }
+    };
 }

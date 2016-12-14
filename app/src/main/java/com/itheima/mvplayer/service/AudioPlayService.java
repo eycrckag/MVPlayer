@@ -3,9 +3,9 @@ package com.itheima.mvplayer.service;
 import android.app.Service;
 import android.content.Intent;
 import android.media.MediaPlayer;
+import android.os.Binder;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 import com.itheima.mvplayer.app.Constant;
 import com.itheima.mvplayer.model.AudioManager;
@@ -15,37 +15,65 @@ import java.io.IOException;
 public class AudioPlayService extends Service {
     public static final String TAG = "AudioPlayService";
     private MediaPlayer mMediaPlayer;
+    private AudioPlayerProxy mAudioPlayerProxy;
+    private int mPosition;
 
+    public static final String ACTION_START_PLAY = "start";
 
 
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        return null;
+        return mAudioPlayerProxy;
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        mAudioPlayerProxy = new AudioPlayerProxy();
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        mPosition = intent.getIntExtra(Constant.Extra.AUDIO_POSITION, -1);
+        startPlay();
+        return super.onStartCommand(intent, flags, startId);
+    }
+
+
+    public void startPlay() {
+        if (mMediaPlayer !=  null) {
+            mMediaPlayer.reset();
+            mMediaPlayer.release();
+            mMediaPlayer = null;
+        }
         mMediaPlayer = new MediaPlayer();
-        int position = intent.getIntExtra(Constant.Extra.AUDIO_POSITION, -1);
-        String path = AudioManager.getInstance().getAudioItem(position).getData();
+        String path = AudioManager.getInstance().getAudioItem(mPosition).getData();
         try {
-            Log.d(TAG, "init: audio path " + path);
             mMediaPlayer.setDataSource(path);
+            mMediaPlayer.setOnPreparedListener(mOnPreparedListener);
             mMediaPlayer.prepare();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        mMediaPlayer.setOnPreparedListener(mOnPreparedListener);
-        return super.onStartCommand(intent, flags, startId);
     }
-
 
     private MediaPlayer.OnPreparedListener mOnPreparedListener = new MediaPlayer.OnPreparedListener() {
         @Override
         public void onPrepared(MediaPlayer mp) {
             mMediaPlayer.start();
+            notifyStartPlay();
         }
     };
+
+    private void notifyStartPlay() {
+        Intent intent = new Intent(ACTION_START_PLAY);
+        sendBroadcast(intent);
+    }
+
+
+    public class AudioPlayerProxy extends Binder {
+
+    }
 
 }

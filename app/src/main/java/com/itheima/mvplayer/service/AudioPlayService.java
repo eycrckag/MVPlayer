@@ -130,6 +130,10 @@ public class AudioPlayService extends Service {
         public int getDuration() {
             return mMediaPlayer.getDuration();
         }
+
+        public void seekTo(int progress) {
+            mMediaPlayer.seekTo(progress);
+        }
     }
 
 }

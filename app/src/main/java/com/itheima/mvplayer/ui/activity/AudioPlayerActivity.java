@@ -68,6 +68,7 @@ public class AudioPlayerActivity extends BaseActivity {
         AudioItemBean itemBean = AudioManager.getInstance().getAudioItem(position);
         mTvTitle.setText(itemBean.getTitle());
         mTvArtist.setText(itemBean.getArtist());
+        mSeekBar.setOnSeekBarChangeListener(mOnSeekBarChangeListener);
     }
 
     private void startService() {
@@ -103,6 +104,7 @@ public class AudioPlayerActivity extends BaseActivity {
         AudioItemBean audioItem = AudioManager.getInstance().getAudioItem(pos);
         mTvTitle.setText(audioItem.getTitle());
         mTvArtist.setText(audioItem.getArtist());
+        mSeekBar.setMax(audioItem.getDuration());
         updateStartPlay();
         startUpdateProgress();
     }
@@ -113,6 +115,7 @@ public class AudioPlayerActivity extends BaseActivity {
             int duration = mAudioPlayerProxy.getDuration();
             String time = StringUtils.formatDuration(progress) + "/" + StringUtils.formatDuration(duration);
             mTime.setText(time);
+            mSeekBar.setProgress(mAudioPlayerProxy.getProgress());
         }
         mHandler.postDelayed(new Runnable() {
             @Override
@@ -193,6 +196,24 @@ public class AudioPlayerActivity extends BaseActivity {
         @Override
         public void onServiceDisconnected(ComponentName name) {
             mAudioPlayerProxy = null;
+        }
+    };
+
+    private SeekBar.OnSeekBarChangeListener mOnSeekBarChangeListener = new SeekBar.OnSeekBarChangeListener() {
+        @Override
+        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+            if (fromUser) {
+                mAudioPlayerProxy.seekTo(progress);
+            }
+        }
+
+        @Override
+        public void onStartTrackingTouch(SeekBar seekBar) {
+        }
+
+        @Override
+        public void onStopTrackingTouch(SeekBar seekBar) {
+
         }
     };
 }

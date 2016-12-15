@@ -18,7 +18,9 @@ public class AudioPlayService extends Service {
     public static final String TAG = "AudioPlayService";
     private MediaPlayer mMediaPlayer;
     private AudioPlayerProxy mAudioPlayerProxy;
-    private int mPosition;
+
+    private static final int POSITION_NOT_FOUND = -1;
+    private int mPosition = POSITION_NOT_FOUND;
 
     public static final String ACTION_START_PLAY = "start";
     public static final String ACTION_COMPLETE_PLAY = "complete";
@@ -45,8 +47,8 @@ public class AudioPlayService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if (intent != null) {
-            int position = intent.getIntExtra(Constant.Extra.AUDIO_POSITION, -1);
+        int position = intent.getIntExtra(Constant.Extra.AUDIO_POSITION, -1);
+        if (position != POSITION_NOT_FOUND) {
             if (mPosition == position) {
                 notifyStartPlay();
             } else {
@@ -59,7 +61,7 @@ public class AudioPlayService extends Service {
 
 
     public void startPlay() {
-        if (mMediaPlayer !=  null) {
+        if (mMediaPlayer != null) {
             mMediaPlayer.reset();
             mMediaPlayer.release();
             mMediaPlayer = null;
@@ -136,7 +138,7 @@ public class AudioPlayService extends Service {
         }
 
         public void playNext() {
-            mPosition ++;
+            mPosition++;
             startPlay();
         }
 
@@ -149,7 +151,7 @@ public class AudioPlayService extends Service {
         }
 
         public void playPre() {
-            mPosition --;
+            mPosition--;
             startPlay();
         }
 

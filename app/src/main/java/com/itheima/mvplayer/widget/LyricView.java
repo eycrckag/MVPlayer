@@ -6,7 +6,6 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 
@@ -25,7 +24,7 @@ public class LyricView extends View {
     private float mCenterY;
     private float mLineHeight;
 
-    private float mHighLightPosition = 0;
+    private int mHighLightPosition = 0;
 
     private float mHighLightTextSize;
     private float mNormalTextSize;
@@ -35,6 +34,9 @@ public class LyricView extends View {
     private String[] mMultipleLyrics = {"啦", "啦啦", "啦啦啦"};
 
     private List<LyricBean> mLyrics;
+
+    private int mProgress;
+    private int mDuration;
 
     public LyricView(Context context) {
         this(context, null);
@@ -75,6 +77,18 @@ public class LyricView extends View {
     }
 
     private void drawLyrics(Canvas canvas) {
+        LyricBean lyricBean = mLyrics.get(mHighLightPosition);
+        int startTime = lyricBean.getTimestamp();
+        int endTime = 0;
+        if (mHighLightPosition == mLyrics.size() - 1) {
+            endTime = mDuration;
+        } else {
+            endTime = mLyrics.get(mHighLightPosition + 1).getTimestamp();
+        }
+        int lineDuration  = endTime - startTime;
+        int passed = mProgress - startTime;
+        float offset = passed * 1.0f / lineDuration * mLineHeight;
+
         for (int i = 0; i < mLyrics.size(); i++) {
             //Init paint first, then measure text size
             if (mHighLightPosition == i) {
@@ -86,8 +100,10 @@ public class LyricView extends View {
             }
             String text = mLyrics.get(i).getLyric();
             mPaint.getTextBounds(text, 0, text.length(), mTextRect);
+
+
             float x = mCenterX - mTextRect.width() / 2;
-            float y = mCenterY + mTextRect.height() / 2 + (i - mHighLightPosition) * mLineHeight;
+            float y = mCenterY + mTextRect.height() / 2 + (i - mHighLightPosition) * mLineHeight - offset;
 
             canvas.drawText(text, x, y, mPaint);
         }
@@ -142,7 +158,8 @@ public class LyricView extends View {
     }
 
     public void roll(int progress, int duration) {
-        Log.d(TAG, "roll: " + progress);
+        mProgress = progress;
+        mDuration = duration;
         for (int i = 0; i < mLyrics.size(); i++) {
             int start = mLyrics.get(i).getTimestamp();
             int end = 0;

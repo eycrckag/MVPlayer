@@ -28,6 +28,8 @@
 
         <activity android:name=".ui.activity.SettingsActivity"/>
 
+        <activity android:name=".ui.activity.AboutActivity"/>
+
         <activity android:name=".ui.activity.MVPlayerActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
 

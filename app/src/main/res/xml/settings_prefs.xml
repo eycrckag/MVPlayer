@@ -2,10 +2,16 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <Preference android:title="@string/clean_cache"/>
 
-    <SwitchPreference android:title="@string/push_notification"/>
+    <SwitchPreference
+        android:key="push_notification"
+        android:title="@string/push_notification"/>
 
-    <SwitchPreference android:title="@string/none_wifi_load_images"/>
+    <SwitchPreference
+        android:key="no_wifi_load_images"
+        android:title="@string/no_wifi_load_images"/>
 
-    <Preference android:title="@string/about"/>
+    <Preference
+        android:key="about"
+        android:title="@string/about"/>
 
 </PreferenceScreen>

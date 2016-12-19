@@ -28,4 +28,5 @@
     <string name="loading_lyric">玩命加载中&#8230;</string>
     <string name="lyric_not_found">亲，歌词没找到</string>
     <string name="heima">黑马程序员是全宇宙最牛逼的程序员</string>
+    <string name="mv_count">%d首</string>
 </resources>

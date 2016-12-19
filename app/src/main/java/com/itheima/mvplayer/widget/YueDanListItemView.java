@@ -13,6 +13,7 @@ import com.itheima.mvplayer.model.YueDanBean;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import jp.wasabeef.glide.transformations.CropCircleTransformation;
 
 public class YueDanListItemView extends RelativeLayout {
     public static final String TAG = "YueDanListItemView";
@@ -47,7 +48,11 @@ public class YueDanListItemView extends RelativeLayout {
     public void bindView(YueDanBean.PlayListsBean playListsBean) {
         mTitle.setText(playListsBean.getTitle());
         mNickname.setText(playListsBean.getCreator().getNickName());
-        Glide.with(getContext()).load(playListsBean.getThumbnailPic()).centerCrop().into(mItemImg);
-        Glide.with(getContext()).load(playListsBean.getCreator().getLargeAvatar()).into(mAvatar);
+        Glide.with(getContext()).load(playListsBean.getPlayListPic()).centerCrop().into(mItemImg);
+        Glide.with(getContext()).load(playListsBean.getCreator().getLargeAvatar())
+                .bitmapTransform(new CropCircleTransformation(getContext()))
+                .into(mAvatar);
+        String count = String.format(getContext().getString(R.string.mv_count), playListsBean.getVideoCount());
+        mMvCount.setText(count);
     }
 }

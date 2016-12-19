@@ -33,15 +33,16 @@
 
         <ImageView
             android:id="@id/avatar"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
             android:layout_gravity="center_vertical"
             android:layout_margin="10dp"/>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_margin="10dp">
 
             <TextView
                 android:id="@id/title"
@@ -51,7 +52,9 @@
                 android:textSize="18sp"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
-                android:textColor="@android:color/white"/>
+                android:textColor="@android:color/white"
+                android:maxLines="1"
+                android:ellipsize="end"/>
 
 
             <TextView
@@ -61,7 +64,10 @@
                 android:layout_weight="1"
                 android:gravity="center_vertical"
                 android:textColor="@color/green"
-                android:text="宁静而优美"/>
+                android:layout_marginTop="5dp"
+                android:text="宁静而优美"
+                android:maxLines="1"
+                android:ellipsize="end"/>
 
 
             <TextView
@@ -71,6 +77,7 @@
                 android:layout_weight="1"
                 android:gravity="center_vertical"
                 android:textColor="@android:color/white"
+                android:layout_marginTop="5dp"
                 android:text="收入高清MV38首"/>
 
 

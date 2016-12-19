@@ -83,19 +83,4 @@ public abstract class BaseListFragment extends BaseFragment implements BaseListV
         toast(R.string.load_data_failed);
     }
 
-    @Override
-    public void onLoadMoreListDataFailed() {
-        toast(R.string.load_more_data_failed);
-    }
-
-    @Override
-    public void onLoadMoreListDataSuccess() {
-        toast(R.string.load_more_data_success);
-        mAdapter.notifyDataSetChanged();
-    }
-
-    @Override
-    public void onNoMoreData() {
-        toast(R.string.no_more_data);
-    }
 }

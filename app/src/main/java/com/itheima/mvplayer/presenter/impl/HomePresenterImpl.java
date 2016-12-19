@@ -2,7 +2,6 @@ package com.itheima.mvplayer.presenter.impl;
 
 import com.itheima.mvplayer.model.HomeItemBean;
 import com.itheima.mvplayer.network.HomeRequest;
-import com.itheima.mvplayer.network.MVPlayerRequest;
 import com.itheima.mvplayer.network.NetworkListener;
 import com.itheima.mvplayer.presenter.BaseListPresenter;
 import com.itheima.mvplayer.view.BaseListView;
@@ -17,8 +16,6 @@ public class HomePresenterImpl implements BaseListPresenter<HomeItemBean> {
     private BaseListView mHomeView;
 
     private List<HomeItemBean> mHomeItemBeanList;
-
-    private boolean mHasMoreData = true;
 
     public HomePresenterImpl(BaseListView homeView) {
         mHomeView = homeView;
@@ -61,25 +58,7 @@ public class HomePresenterImpl implements BaseListPresenter<HomeItemBean> {
 
     @Override
     public void loadMoreListData() {
-        if (mHasMoreData) {
-            HomeRequest.getLoadMoreRequest(mHomeItemBeanList.size(), mLoadMoreListener).execute();
-        } else {
-            mHomeView.onNoMoreData();
-        }
+        HomeRequest.getLoadMoreRequest(mHomeItemBeanList.size(), mListNetworkListener).execute();
     }
-
-    private NetworkListener<List<HomeItemBean>> mLoadMoreListener = new NetworkListener<List<HomeItemBean>>() {
-        @Override
-        public void onError(String errorMsg) {
-            mHomeView.onLoadMoreListDataFailed();
-        }
-
-        @Override
-        public void onSuccess(List<HomeItemBean> result) {
-            mHasMoreData = (result.size() == MVPlayerRequest.DEFAULT_PAGE_SIZE);
-            mHomeItemBeanList.addAll(result);
-            mHomeView.onLoadMoreListDataSuccess();
-        }
-    };
 
 }

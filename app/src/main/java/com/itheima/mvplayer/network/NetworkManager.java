@@ -2,7 +2,6 @@ package com.itheima.mvplayer.network;
 
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
 
 import java.io.IOException;
 
@@ -22,7 +21,6 @@ public class NetworkManager {
         mOkHttpClient = new OkHttpClient();
     }
 
-
     public static NetworkManager getInstance() {
         if (mNetworkManager == null) {
             synchronized (NetworkManager.class) {
@@ -35,7 +33,6 @@ public class NetworkManager {
     }
 
     public void sendRequest(final MVPlayerRequest mvPlayerRequest) {
-        Log.d(TAG, "sendRequest: " + mvPlayerRequest.getUrl());
         final Request request = new Request.Builder().get().url(mvPlayerRequest.getUrl()).build();
         mOkHttpClient.newCall(request).enqueue(new Callback() {
             @Override
@@ -50,9 +47,7 @@ public class NetworkManager {
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                // If I call response.body().string() twice, there's a exception, wired, maybe okhttp bug.
                 String responseString = response.body().string();
-                Log.d(TAG, "onResponse: " + responseString);
                 final Object parsedResponse =  mvPlayerRequest.parseNetworkResponse(responseString);
                 mHandler.post(new Runnable() {
                     @Override

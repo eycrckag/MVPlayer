@@ -290,6 +290,81 @@ BaseListPresenter定义了一个BaseListFragment的业务逻辑，由各个界�
 
 
 # MV #
+## TabLayout的使用 ##
+### TabLayout的配置 ###
+    <android.support.design.widget.TabLayout
+        android:id="@id/tab_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        app:tabTextColor="@color/gray"
+        app:tabSelectedTextColor="@android:color/white"
+        app:tabIndicatorColor="@android:color/white"
+        app:tabIndicatorHeight="5dp"
+        app:tabMode="scrollable">
+    </android.support.design.widget.TabLayout>
+### 关联ViewPager ###
+   	mTabLayout.setupWithViewPager(mViewPager);
+
+## 获取标题 ##
+MVAdapter中实现getPageTitle，TayLayout会通过该方法获取标题。
+
+    @Override
+    public CharSequence getPageTitle(int position) {
+        return mAreas.get(position).getName();
+    }
+## MVPageFragment实现 ##
+### 获取区域码 ###
+    public static MVPageFragment newInstance(String code) {
+        MVPageFragment itemFragment = new MVPageFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString("code", code);
+        itemFragment.setArguments(bundle);
+        return itemFragment;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Bundle arguments = getArguments();
+        mCode = arguments.getString("code");
+    }
+
+### 返回Adpater ###
+    @Override
+    public RecyclerView.Adapter getListAdapter() {
+        return new MVPageListAdapter(getContext(), mMVPagePresenter.getListData());
+    }
+### 返回Presenter ###
+    @Override
+    public BaseListPresenter getPresenter(BaseListView view) {
+        mMVPagePresenter = new MVPagePresenterImpl(view, mCode);
+        return mMVPagePresenter;
+    }
+
+## MVPagePresenterImpl实现 ##
+### 加载数据 ###
+    @Override
+    public void loadListData() {
+        MVPageRequest.getRequest(mCode, mNetworkListener).execute();
+    }
+### 返回数据 ###
+    @Override
+    public List<MVPageBean.VideosBean> getListData() {
+        return mVideos;
+    }
+### 刷新 ###
+    @Override
+    public void refresh() {
+        mVideos.clear();
+        MVPageRequest.getRequest(mCode, mNetworkListener).execute();
+    }
+
+### 加载更多数据 ###
+    @Override
+    public void loadMoreListData() {
+        MVPageRequest.getLodeMoreRequest(mCode, mVideos.size(), mNetworkListener).execute();
+    }
 
 # MV详情界面 #
 

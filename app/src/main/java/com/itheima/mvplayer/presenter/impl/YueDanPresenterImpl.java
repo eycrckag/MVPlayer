@@ -46,22 +46,8 @@ public class YueDanPresenterImpl implements BaseListPresenter<YueDanBean.PlayLis
 
     @Override
     public void loadMoreListData() {
-        YueDanRequest.getLoadMoreRequest(mPlayListsBeanList.size(), mLoadMoreListener).execute();
+        YueDanRequest.getLoadMoreRequest(mPlayListsBeanList.size(), mYueDanBeanNetworkListener).execute();
     }
-
-
-    private NetworkListener<YueDanBean> mLoadMoreListener = new NetworkListener<YueDanBean>() {
-        @Override
-        public void onError(String errorMsg) {
-            mYueDanView.onLoadListDataFailed();
-        }
-
-        @Override
-        public void onSuccess(YueDanBean result) {
-            mPlayListsBeanList.addAll(result.getPlayLists());
-            mYueDanView.onLoadListDataSuccess();
-        }
-    };
 
 
 

@@ -4,23 +4,28 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 
 import com.itheima.mvplayer.R;
-import com.itheima.mvplayer.presenter.MVPresenter;
-import com.itheima.mvplayer.presenter.impl.MVPresenterImpl;
+import com.itheima.mvplayer.model.AreaBean;
+import com.itheima.mvplayer.network.MVAreaRequest;
+import com.itheima.mvplayer.network.NetworkListener;
 import com.itheima.mvplayer.ui.adapter.MVAdapter;
-import com.itheima.mvplayer.view.MVView;
+import com.itheima.mvplayer.utils.URLProviderUtil;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 
-public class MVFragment extends BaseFragment implements MVView{
+public class MVFragment extends BaseFragment{
     public static final String TAG = "MVFragment";
     @BindView(R.id.tab_layout)
     TabLayout mTabLayout;
     @BindView(R.id.view_pager)
     ViewPager mViewPager;
 
-    private MVPresenter mMVPresenter;
-
     private MVAdapter mMVAdapter;
+
+    private List<AreaBean> mAreas;
+
 
     @Override
     protected int getLayoutResID() {
@@ -30,23 +35,29 @@ public class MVFragment extends BaseFragment implements MVView{
     @Override
     protected void init() {
         super.init();
-        mMVPresenter = new MVPresenterImpl(this);
-        mMVAdapter = new MVAdapter(getChildFragmentManager(), mMVPresenter.getAreas());
+        mAreas = new ArrayList<AreaBean>();
+        mMVAdapter = new MVAdapter(getChildFragmentManager(), mAreas);
         mViewPager.setAdapter(mMVAdapter);
         mTabLayout.setupWithViewPager(mViewPager);
-        mMVPresenter.loadAreaData();
+        loadAreaData();
     }
 
-    @Override
-    public void onLoadAreaFailed() {
-        toast(R.string.load_data_failed);
+    public void loadAreaData() {
+        new MVAreaRequest(URLProviderUtil.getMVareaUrl(), mNetworkListener).execute();
     }
 
-    @Override
-    public void onLoadAreaSuccess() {
-        toast(R.string.load_data_success);
+    private NetworkListener<List<AreaBean>> mNetworkListener = new NetworkListener<List<AreaBean>>() {
+        @Override
+        public void onError(String errorMsg) {
+        }
+
+        @Override
+        public void onSuccess(List<AreaBean> result) {
+            mAreas.addAll(result);
+            mMVAdapter.notifyDataSetChanged();
+
+        }
+    };
 
 
-        mMVAdapter.notifyDataSetChanged();
-    }
 }

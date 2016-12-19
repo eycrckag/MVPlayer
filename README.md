@@ -143,6 +143,7 @@
         <item name="android:activityOpenEnterAnimation">@anim/activity_enter</item>
         <item name="android:activityCloseExitAnimation">@anim/activity_exit</item>
     </style>
+**更多动画，请参考[Material Animations](https://github.com/lgvalle/Material-Animations)**
 
 # 首页 #
 ## 功能需求 ##

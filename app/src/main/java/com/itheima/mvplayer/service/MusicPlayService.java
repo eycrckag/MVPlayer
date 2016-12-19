@@ -14,8 +14,8 @@ import com.itheima.mvplayer.model.AudioManager;
 import java.io.IOException;
 import java.util.Random;
 
-public class AudioPlayService extends Service {
-    public static final String TAG = "AudioPlayService";
+public class MusicPlayService extends Service {
+    public static final String TAG = "MusicPlayService";
     private MediaPlayer mMediaPlayer;
     private AudioPlayerProxy mAudioPlayerProxy;
 

@@ -18,14 +18,14 @@ import com.itheima.mvplayer.R;
 import com.itheima.mvplayer.app.Constant;
 import com.itheima.mvplayer.model.AudioItemBean;
 import com.itheima.mvplayer.model.AudioManager;
-import com.itheima.mvplayer.service.AudioPlayService;
+import com.itheima.mvplayer.service.MusicPlayService;
 import com.itheima.mvplayer.utils.StringUtils;
 import com.itheima.mvplayer.widget.LyricView;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 
-public class AudioPlayerActivity extends BaseActivity {
+public class MusicPlayerActivity extends BaseActivity {
 
     @BindView(R.id.tv_title)
     TextView mTvTitle;
@@ -52,7 +52,7 @@ public class AudioPlayerActivity extends BaseActivity {
     private static final int DEFAULT_DELAY = 500;
     private static final int UPDATE_LYRIC_INTERVAL = 100;
 
-    private AudioPlayService.AudioPlayerProxy mAudioPlayerProxy;
+    private MusicPlayService.AudioPlayerProxy mAudioPlayerProxy;
     private Handler mHandler = new Handler();
 
     @Override
@@ -78,15 +78,15 @@ public class AudioPlayerActivity extends BaseActivity {
 
     private void startService() {
         Intent intent = new Intent(getIntent());
-        intent.setClass(this, AudioPlayService.class);
+        intent.setClass(this, MusicPlayService.class);
         startService(intent);
     }
 
 
     private void registerBroadcast() {
         IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(AudioPlayService.ACTION_START_PLAY);
-        intentFilter.addAction(AudioPlayService.ACTION_COMPLETE_PLAY);
+        intentFilter.addAction(MusicPlayService.ACTION_START_PLAY);
+        intentFilter.addAction(MusicPlayService.ACTION_COMPLETE_PLAY);
         registerReceiver(mUpdateReceiver, intentFilter);
     }
 
@@ -94,10 +94,10 @@ public class AudioPlayerActivity extends BaseActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
-            if (action.equals(AudioPlayService.ACTION_START_PLAY)) {
+            if (action.equals(MusicPlayService.ACTION_START_PLAY)) {
                 int pos = intent.getIntExtra(Constant.Extra.AUDIO_POSITION, -1);
                 updateStartPlay(pos);
-            } else if (action.equals(AudioPlayService.ACTION_COMPLETE_PLAY)) {
+            } else if (action.equals(MusicPlayService.ACTION_COMPLETE_PLAY)) {
                 stopUpdateProgress();
                 updateCompletePlay();
             }
@@ -172,7 +172,7 @@ public class AudioPlayerActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        Intent intent = new Intent(this, AudioPlayService.class);
+        Intent intent = new Intent(this, MusicPlayService.class);
         bindService(intent, mServiceConnection, BIND_AUTO_CREATE);
     }
 
@@ -198,13 +198,13 @@ public class AudioPlayerActivity extends BaseActivity {
             case R.id.iv_play_mode:
                 mAudioPlayerProxy.updatePlayMode();
                 switch (mAudioPlayerProxy.getPlayMode()) {
-                    case AudioPlayService.PLAY_MODE_ORDER:
+                    case MusicPlayService.PLAY_MODE_ORDER:
                         mIvPlayMode.setBackgroundResource(R.drawable.selector_btn_playmode_order);
                         break;
-                    case AudioPlayService.PLAY_MODE_RANDOM:
+                    case MusicPlayService.PLAY_MODE_RANDOM:
                         mIvPlayMode.setBackgroundResource(R.drawable.selector_btn_playmode_random);
                         break;
-                    case AudioPlayService.PLAY_MODE_SINGLE:
+                    case MusicPlayService.PLAY_MODE_SINGLE:
                         mIvPlayMode.setBackgroundResource(R.drawable.selector_btn_playmode_single);
                         break;
                 }
@@ -246,7 +246,7 @@ public class AudioPlayerActivity extends BaseActivity {
     private ServiceConnection mServiceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
-            mAudioPlayerProxy = (AudioPlayService.AudioPlayerProxy) service;
+            mAudioPlayerProxy = (MusicPlayService.AudioPlayerProxy) service;
         }
 
         @Override

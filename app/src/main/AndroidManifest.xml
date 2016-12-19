@@ -33,10 +33,10 @@
         <activity android:name=".ui.activity.MVPlayerActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
 
-        <activity android:name=".ui.activity.AudioPlayerActivity"
+        <activity android:name=".ui.activity.MusicPlayerActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
 
-        <service android:name=".service.AudioPlayService"/>
+        <service android:name=".service.MusicPlayService"/>
     </application>
 
 </manifest>

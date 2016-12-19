@@ -12,7 +12,7 @@ import android.widget.ListView;
 import com.itheima.mvplayer.R;
 import com.itheima.mvplayer.app.Constant;
 import com.itheima.mvplayer.model.AudioManager;
-import com.itheima.mvplayer.ui.activity.AudioPlayerActivity;
+import com.itheima.mvplayer.ui.activity.MusicPlayerActivity;
 import com.itheima.mvplayer.ui.adapter.AudioListAdapter;
 
 import butterknife.BindView;
@@ -65,12 +65,12 @@ public class VBangFragment extends BaseFragment {
     private AdapterView.OnItemClickListener mOnItemClickListener = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-/*            Intent intent = new Intent(getContext(), AudioPlayerActivity.class);
+/*            Intent intent = new Intent(getContext(), MusicPlayerActivity.class);
             Cursor cursor = (Cursor) mAudioListAdapter.getItem(position);
             String string = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATA));
             intent.putExtra(Constant.Extra.AUDIO_PATH, string);
             startActivity(intent);*/
-            Intent intent = new Intent(getContext(), AudioPlayerActivity.class);
+            Intent intent = new Intent(getContext(), MusicPlayerActivity.class);
             intent.putExtra(Constant.Extra.AUDIO_POSITION, position);
             startActivity(intent);
         }

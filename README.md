@@ -73,7 +73,7 @@
     }
 
 ## 使用PreferenceFragment ##
-注意SettingsFragment必须是public。
+注意SettingsFragment必须是public，在布局文件中指定fragment时必须给fragment一个id。
 
     public static class SettingsFragment extends PreferenceFragment {
 
@@ -101,7 +101,9 @@
 ## 设置选项 ##
 	<?xml version="1.0" encoding="utf-8"?>
 	<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-	    <Preference android:title="@string/clean_cache"/>
+	    <Preference
+	        android:key="clear_cache"
+	        android:title="@string/clean_cache"/>
 	
 	    <SwitchPreference
 	        android:key="push_notification"
@@ -142,8 +144,16 @@
         <item name="android:activityCloseExitAnimation">@anim/activity_exit</item>
     </style>
 
+# 首页 #
+## 功能需求 ##
+* MV列表 （RecyclerView）
+* 下拉刷新 (SwipeRefreshLayout)
+* 加载更多
+
+
 # OKHttp的封装 #
 ## 请求 ##
+
 ### 构造方法 ###
     public MVPlayerRequest(String url, NetworkListener<T> listener) {
         mUrl = url;
@@ -173,7 +183,6 @@
 NetworkManager维护一个OkhttpClient的对象来执行网络请求。当收到网络结果后，通过绑定主线程的Handler回调到主线程。
 
     public void sendRequest(final MVPlayerRequest mvPlayerRequest) {
-        Log.d(TAG, "sendRequest: " + mvPlayerRequest.getUrl());
         final Request request = new Request.Builder().get().url(mvPlayerRequest.getUrl()).build();
         mOkHttpClient.newCall(request).enqueue(new Callback() {
             @Override
@@ -188,9 +197,7 @@ NetworkManager维护一个OkhttpClient的对象来执行网络请求。当收到
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                // If I call response.body().string() twice, there's a exception, wired, maybe okhttp bug.
                 String responseString = response.body().string();
-                Log.d(TAG, "onResponse: " + responseString);
                 final Object parsedResponse =  mvPlayerRequest.parseNetworkResponse(responseString);
                 mHandler.post(new Runnable() {
                     @Override
@@ -202,21 +209,84 @@ NetworkManager维护一个OkhttpClient的对象来执行网络请求。当收到
         });
     }
 
-# 首页 #
-## 功能需求 ##
-* MV列表 （RecyclerView）
-* 下拉刷新 (SwipeRefreshLayout)
-* 加载更多
 
 # 悦单 #
 ## 功能需求 ##
-* MV列表
-* 下拉刷新
+* 悦单列表 （RecyclerView）
+* 下拉刷新 (SwipeRefreshLayout)
 * 加载更多
 
 
 
-# BaseListFragment #
+# 列表的抽取 #
+由于首页，悦单，MV界面的列表的布局一致（RecyclerView和SwipeRefreshLayout），业务逻辑一致（加载列表数据，下拉刷新，加载更多数据），所以我们可以进行抽取，避免重复的代码。
+
+## BaseListView ##
+View层需要提供的接口非常简单，只需处理数据加载成功或者失败的情况。
+
+	public interface BaseListView {
+	
+	    void onLoadListDataFailed();
+	
+	    void onLoadListDataSuccess();
+	}
+
+## BaseListFragment ##
+BaseListFragment的布局抽取了RecyclerView和SwipeRefreshLayout以及相关的业务逻辑。
+### 下拉刷新 ###
+    private SwipeRefreshLayout.OnRefreshListener mOnRefreshListener = new SwipeRefreshLayout.OnRefreshListener() {
+        @Override
+        public void onRefresh() {
+            mBaseListPresenter.refresh();
+        }
+    };
+
+### 加载更多 ###
+    private RecyclerView.OnScrollListener mOnScrollListener = new RecyclerView.OnScrollListener() {
+        @Override
+        public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+            if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                if (isScrollToBottom()) {
+                    mBaseListPresenter.loadMoreListData();
+                }
+            }
+        }
+    };
+
+    private boolean isScrollToBottom() {
+        return mLinearLayoutManager.findLastVisibleItemPosition() == mBaseListPresenter.getListData().size() - 1;
+    }
+### 加载数据成功或者失败 ###
+    public void onLoadListDataSuccess() {
+        toast(R.string.load_data_success);
+        mAdapter.notifyDataSetChanged();
+        mSwipeRefresh.setRefreshing(false);
+    }
+
+    @Override
+    public void onLoadListDataFailed() {
+        toast(R.string.load_data_failed);
+    }
+
+### 子类需要实现Adapter和Presenter ###
+    public abstract RecyclerView.Adapter getListAdapter();
+    public abstract BaseListPresenter getPresenter(BaseListView view);
+
+## BaseListPresenter ##
+BaseListPresenter定义了一个BaseListFragment的业务逻辑，由各个界面具体实现该Presenter，比如HomePresenterImpl, YueDanPresenterImpl, MVPagePresenterImpl。
+
+	public interface BaseListPresenter<T> {
+	
+	    void loadListData();
+	
+	    List<T> getListData();
+	
+	    void refresh();
+	
+	    void loadMoreListData();
+	
+	}
+
 
 # MV #
 

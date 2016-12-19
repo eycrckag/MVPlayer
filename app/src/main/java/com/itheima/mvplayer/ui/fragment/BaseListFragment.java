@@ -55,12 +55,16 @@ public abstract class BaseListFragment extends BaseFragment implements BaseListV
         @Override
         public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
             if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                if (mLinearLayoutManager.findLastVisibleItemPosition() == mBaseListPresenter.getListData().size() - 1) {
+                if (isScrollToBottom()) {
                     mBaseListPresenter.loadMoreListData();
                 }
             }
         }
     };
+
+    private boolean isScrollToBottom() {
+        return mLinearLayoutManager.findLastVisibleItemPosition() == mBaseListPresenter.getListData().size() - 1;
+    }
 
     private SwipeRefreshLayout.OnRefreshListener mOnRefreshListener = new SwipeRefreshLayout.OnRefreshListener() {
         @Override

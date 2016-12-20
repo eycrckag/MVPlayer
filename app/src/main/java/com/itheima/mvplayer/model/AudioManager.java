@@ -30,15 +30,6 @@ public class AudioManager {
 
     public void loadAudio(Context context, CursorAdapter cursorAdapter) {
         mCursorAdapter = cursorAdapter;
-/*        ContentResolver contentResolver = getContext().getContentResolver();
-        Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
-        String[] projection = {MediaStore.Audio.Media._ID, MediaStore.Audio.Media.DATA,
-                MediaStore.Audio.Media.DISPLAY_NAME,
-                MediaStore.Audio.Media.ARTIST,
-                MediaStore.Audio.Media.DURATION,
-                MediaStore.Audio.Media.SIZE};
-        Cursor query = contentResolver.query(uri, projection, null, null, null);
-        PrintUtils.printCursor(query);*/
         Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
         String[] projection = {MediaStore.Audio.Media._ID, MediaStore.Audio.Media.DATA,
                 MediaStore.Audio.Media.TITLE,

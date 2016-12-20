@@ -367,8 +367,37 @@ MVAdapter中实现getPageTitle，TayLayout会通过该方法获取标题。
     }
 
 # MV详情界面 #
+## 视频播放 ##
+### VideoView###
+VideoView基于SurfaceView和MediaPlayer
+### Vitamio ###
+Vitamio基于FFmpeg（[传送门](https://www.vitamio.org/)）
+### ijkPlayer ###
+ijkPlayer基于FFmpeg，MediaCodec，VideoToolbox ([传送门](https://github.com/Bilibili/ijkplayer))
+### JieCaoVideoPlayer ###
+JieCaoVideoPlayer基于ijkPlayer([传送门](https://github.com/lipangit/JieCaoVideoPlayer))
 
 # V榜 #
+## 查询多媒体数据库 ##
+    public void loadAudio(Context context, CursorAdapter cursorAdapter) {
+        mCursorAdapter = cursorAdapter;
+        Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+        String[] projection = {MediaStore.Audio.Media._ID, MediaStore.Audio.Media.DATA,
+                MediaStore.Audio.Media.TITLE,
+                MediaStore.Audio.Media.ARTIST,
+                MediaStore.Audio.Media.DURATION,
+                MediaStore.Audio.Media.SIZE,
+                MediaStore.Audio.Media.DISPLAY_NAME};
+        mAudioAsyncQueryHandler = new AudioAsyncQueryHandler(context.getContentResolver());
+        mAudioAsyncQueryHandler.startQuery(0, cursorAdapter, uri, projection, null, null, null);
+    }
+
+## 通知UI更新 ##
+    @Override
+    protected void onQueryComplete(int token, Object cookie, Cursor cursor) {
+        ((AudioListAdapter)cookie).swapCursor(cursor);
+		...
+    }
 
 # 音乐播放界面 #
 

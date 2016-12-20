@@ -399,5 +399,34 @@ JieCaoVideoPlayer基于ijkPlayer([传送门](https://github.com/lipangit/JieCaoV
 		...
     }
 
+## Android6.0动态权限 ##
+Andrioid6.0对权限进行了分组，涉及到用户敏感信息的权限只能动态的去获取。当应用的targetSdkVersion小于23时，
+会默认采用以前的权限管理机制，当targetSdkVersion大于等于23时并且运行在Andorid6.0系统上，它才会采用这套新的权限管理机制。
+
+### 参考 ###
+* [适配Android6.0动态权限管理](http://www.jianshu.com/p/a37f4827079a)
+* [Android6.0权限管理的解析与实战](http://www.jianshu.com/p/a1edba708761)
+
+### 检查权限 ###
+    private boolean hasReadExternalStoragePermission() {
+        return PackageManager.PERMISSION_GRANTED == ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE);
+    }
+### 申请权限 ###
+    private void requestPermission() {
+        ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 0);
+    }
+### 申请权限回调 ###
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case 0:
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    AudioManager.getInstance().loadAudio(getContext(), mAudioListAdapter);
+                } else {
+                    toast(R.string.read_storage_permission_deny);
+                }
+                break;
+        }
+    }
 # 音乐播放界面 #
 

@@ -465,6 +465,26 @@ Andrioid6.0对权限进行了分组，涉及到用户敏感信息的权限只能
             e.printStackTrace();
         }
     }
+
+## 监听MusicPlayerService开始播放的广播 ##
+    private void registerBroadcast() {
+        IntentFilter intentFilter = new IntentFilter();
+        //监听开始播放的ACTION
+        intentFilter.addAction(MusicPlayerService.ACTION_START_PLAY);
+        registerReceiver(mUpdateReceiver, intentFilter);
+    }
+
+    private BroadcastReceiver mUpdateReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (action.equals(MusicPlayerService.ACTION_START_PLAY)) {
+                int pos = intent.getIntExtra(Constant.Extra.AUDIO_POSITION, -1);
+                updateStartPlay(pos);
+            }
+        }
+    };
+
 ## 绑定和解绑服务 ##
     @Override
     protected void onResume() {
@@ -510,6 +530,55 @@ Andrioid6.0对权限进行了分组，涉及到用户敏感信息的权限只能
         } else {
             mMediaPlayer.start();
         }
+    }
+
+## 音乐数据模块的抽取 ##
+在音乐列表界面，我们需要数据列表来渲染UI, 在音乐播放界面，我们同样需要数据列表来实现播放上一首和下一首，我们不可能每个界面都加载一次数据。
+这时候，我们就有必要对音乐数据做一个抽取，做成一个独立的模块来服务APP中不同的界面。
+
+### MusicManger ###
+MusicManager管理App中要用到的音乐数据，使用单例模式。
+
+    private MusicManager() {}
+
+    public static MusicManager getInstance() {
+        if (mAudioManager == null) {
+            synchronized (MusicManager.class) {
+                if (mAudioManager == null) {
+                    mAudioManager = new MusicManager();
+                }
+            }
+        }
+        return mAudioManager;
+    }
+
+### 加载音乐数据 ###
+    public void loadAudio(Context context, CursorAdapter cursorAdapter) {
+        mCursorAdapter = cursorAdapter;
+        Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+        String[] projection = {MediaStore.Audio.Media._ID, MediaStore.Audio.Media.DATA,
+                MediaStore.Audio.Media.TITLE,
+                MediaStore.Audio.Media.ARTIST,
+                MediaStore.Audio.Media.DURATION,
+                MediaStore.Audio.Media.SIZE,
+                MediaStore.Audio.Media.DISPLAY_NAME};
+        mAudioAsyncQueryHandler = new AudioAsyncQueryHandler(context.getContentResolver());
+        mAudioAsyncQueryHandler.startQuery(0, cursorAdapter, uri, projection, null, null, null);
+    }
+
+### 返回某个位置的音乐数据 ###
+    /**
+     * 返回音乐列表position位置的音乐数据
+     */
+    public AudioItemBean getAudioItem(int position) {
+        return mAudioAsyncQueryHandler.getAudioItemBeanList().get(position);
+    }
+### 返回音乐列表大小 ###
+    /**
+     * 返回音乐列表大小
+     */
+    public int getAudioCount() {
+        return mAudioAsyncQueryHandler.getAudioItemBeanList().size();
     }
 
 ## 播放下一首 ##

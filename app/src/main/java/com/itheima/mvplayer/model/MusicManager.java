@@ -41,10 +41,16 @@ public class MusicManager {
         mAudioAsyncQueryHandler.startQuery(0, cursorAdapter, uri, projection, null, null, null);
     }
 
+    /**
+     * 返回音乐列表position位置的音乐数据
+     */
     public AudioItemBean getAudioItem(int position) {
         return mAudioAsyncQueryHandler.getAudioItemBeanList().get(position);
     }
 
+    /**
+     * 返回音乐列表大小
+     */
     public int getAudioCount() {
         return mAudioAsyncQueryHandler.getAudioItemBeanList().size();
     }

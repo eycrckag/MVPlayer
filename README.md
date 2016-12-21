@@ -429,4 +429,251 @@ Andrioid6.0对权限进行了分组，涉及到用户敏感信息的权限只能
         }
     }
 # 音乐播放界面 #
+## 在服务中播放歌曲 ##
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        int position = intent.getIntExtra(Constant.Extra.AUDIO_POSITION, -1);
+        if (position != POSITION_NOT_FOUND) {
+            //如果MusicPlayService正在播放的歌曲就是用户打开播放界面要播放的歌曲，则直接通知Activity已经开始播放，
+            //直接更新进度
+            if (mPosition == position) {
+                notifyStartPlay();
+            } else {
+                mPosition = position;
+                startPlay();
+            }
+        }
+        return super.onStartCommand(intent, flags, startId);
+    }
 
+## 启动播放 ##
+    public void startPlay() {
+        //当开始播放一首歌曲时，如果MediaPlayer不为空，表示之前已经播放了一首歌曲，这时需要重置MediaPlayer
+        if (mMediaPlayer != null) {
+            mMediaPlayer.reset();
+            mMediaPlayer.release();
+            mMediaPlayer = null;
+        }
+        mMediaPlayer = new MediaPlayer();
+        String path = MusicManager.getInstance().getAudioItem(mPosition).getData();
+        try {
+            mMediaPlayer.setDataSource(path);//设置歌曲路径
+            mMediaPlayer.setOnPreparedListener(mOnPreparedListener);//设置准备监听器
+            mMediaPlayer.setOnCompletionListener(mOnCompletionListener);//设置播放结束监听器
+            mMediaPlayer.prepare();//准备
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+## 绑定和解绑服务 ##
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Intent intent = new Intent(this, MusicPlayService.class);
+        bindService(intent, mServiceConnection, BIND_AUTO_CREATE);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unbindService(mServiceConnection);
+        stopUpdateProgress();
+    }
+
+## 获取服务代理 ##
+    private ServiceConnection mServiceConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            mAudioPlayerProxy = (MusicPlayService.AudioPlayerProxy) service;
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            mAudioPlayerProxy = null;
+        }
+    };
+
+## 播放和暂停 ##
+	//MusicPlayerActivity
+    case R.id.iv_play:
+        mAudioPlayerProxy.togglePlay();
+        if (mAudioPlayerProxy.isPlaying()) {
+            updateStartPlay();
+        }  else {
+            updatePausePlay();
+        }
+		break;
+	//MusicPlayerSerivice
+    public void togglePlay() {
+        if (mMediaPlayer.isPlaying()) {
+            mMediaPlayer.pause();
+        } else {
+            mMediaPlayer.start();
+        }
+    }
+
+## 播放下一首 ##
+	//MusicPlayerActivity
+    case R.id.iv_next:
+        if (mAudioPlayerProxy.isLast()) {
+            toast(R.string.is_last_audio);
+        } else {
+            mAudioPlayerProxy.playNext();
+        }
+        break;
+
+	//MusicPlayerService
+    public void playNext() {
+        mPosition++;
+        startPlay();
+    }
+
+## 播放上一首 ##
+	//MusicPlayerActivity
+    case R.id.iv_pre:
+        if (mAudioPlayerProxy.isFirst()) {
+            toast(R.string.is_first_audio);
+        } else {
+            mAudioPlayerProxy.playPre();
+        }
+        break;
+
+	//MusicPlayerService
+    public void playPre() {
+        mPosition--;
+        startPlay();
+    }
+
+## 切换播放模式 ##
+	//MusicPlayerActivity
+    case R.id.iv_play_mode:
+        mAudioPlayerProxy.updatePlayMode();
+        switch (mAudioPlayerProxy.getPlayMode()) {
+            case MusicPlayerService.PLAY_MODE_ORDER:
+                mIvPlayMode.setBackgroundResource(R.drawable.selector_btn_playmode_order);
+                break;
+            case MusicPlayerService.PLAY_MODE_RANDOM:
+                mIvPlayMode.setBackgroundResource(R.drawable.selector_btn_playmode_random);
+                break;
+            case MusicPlayerService.PLAY_MODE_SINGLE:
+                mIvPlayMode.setBackgroundResource(R.drawable.selector_btn_playmode_single);
+                break;
+        }
+        break;
+
+	//MusicPlayerService
+    public void updatePlayMode() {
+        mCurrentMode = (mCurrentMode + 1) % 3;
+    }
+
+## 自定义歌词 ##
+### 绘制单行文本 ###
+    private void drawSingleLine(Canvas canvas, String text) {
+        mPaint.getTextBounds(text, 0, text.length(), mTextRect);
+        mPaint.setColor(Color.WHITE);
+        float x = mCenterX - mTextRect.width() / 2;
+        float y = mCenterY + mTextRect.height() / 2;
+        canvas.drawText(text, x, y, mPaint);
+    }
+
+### 解析歌词 ###
+    /**
+     * 解析一行文本，转换成歌词的bean集合
+     *
+     * @param readLine 读取的一行文本
+     * @return 解析的结果
+     */
+    private static List<LyricBean> parseLyricLine(String readLine) {
+        List<LyricBean> lyrics = new ArrayList<LyricBean>();
+        //[01:22.04][02:35.04]寂寞的夜和谁说话
+        String[] arrays = readLine.split("]");
+        //[01:22.04    [02:35.04    寂寞的夜和谁说话
+        for (int i = 0; i < arrays.length - 1; i++) {
+            LyricBean lyricBean = new LyricBean();
+            lyricBean.setTimestamp(parseTimeStamp(arrays[i]));
+            lyricBean.setLyric(arrays[arrays.length - 1]);
+            lyrics.add(lyricBean);
+        }
+        return lyrics;
+    }
+
+    /**
+     *  解析歌词的时间戳
+     */
+    private static int parseTimeStamp(String time) {
+        //[01:22.04
+        String[] array1 = time.split(":");
+        //[01  22.04
+        String minute = array1[0].substring(1);//01
+        //22.04
+        String[] array2 = array1[1].split("\\.");
+        // 22 04
+        String second  = array2[0];
+        String millis = array2[1];
+
+        return Integer.parseInt(minute) * 60 * 1000 + Integer.parseInt(second) * 1000 + Integer.parseInt(millis);
+    }
+
+### 歌词排序 ###
+    //歌词按照时间戳进行排序
+    Collections.sort(lyricBeanList, new Comparator<LyricBean>() {
+        @Override
+        public int compare(LyricBean o1, LyricBean o2) {
+            return o1.getTimestamp() - o2.getTimestamp();//升序排列
+        }
+    });
+
+
+### 绘制歌词 ###
+    /**
+     *
+     *  根据当前歌曲播放的进度，计算出高亮歌词的位置
+     *
+     * @param progress 当前歌曲的播放进度
+     * @param duration 歌曲的时长
+     */
+    public void roll(int progress, int duration) {
+        for (int i = 0; i < mLyrics.size(); i++) {
+            int start = mLyrics.get(i).getTimestamp();
+            int end = 0;
+            if (i == mLyrics.size() - 1) {
+                end = duration;//如果是最后一行歌词，该行歌词的结束时间为歌曲的时长
+            } else {
+                end = mLyrics.get(i + 1).getTimestamp();
+            }
+            //判断当前播放进度是否在该行歌词内
+            if (progress > start && progress <= end) {
+                mHighLightPosition = i;
+                int lineDuration  = end - start;//获取该行歌词的时长
+                int passed = progress - start;//获取当前该行歌词已播放了多长时间
+                //获取歌词的偏移量
+                mOffset = passed * 1.0f / lineDuration * mLineHeight;
+                invalidate();
+                break;
+            }
+        }
+    }
+
+    /**
+     * 绘制歌词
+     * @param canvas 画布
+     */
+    private void drawLyrics(Canvas canvas) {
+        for (int i = 0; i < mLyrics.size(); i++) {
+            //初始化画笔
+            if (mHighLightPosition == i) {
+                mPaint.setColor(Color.GREEN);
+                mPaint.setTextSize(mHighLightTextSize);
+            } else {
+                mPaint.setColor(Color.WHITE);
+                mPaint.setTextSize(mNormalTextSize);
+            }
+            //测量歌词文本
+            String text = mLyrics.get(i).getLyric();
+            mPaint.getTextBounds(text, 0, text.length(), mTextRect);
+            //计算歌词绘制的位置
+            float x = mCenterX - mTextRect.width() / 2;
+            float y = mCenterY + mTextRect.height() / 2 + (i - mHighLightPosition) * mLineHeight - mOffset;
+            canvas.drawText(text, x, y, mPaint);
+        }
+    }

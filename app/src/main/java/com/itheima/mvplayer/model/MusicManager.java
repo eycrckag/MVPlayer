@@ -7,21 +7,21 @@ import android.widget.CursorAdapter;
 
 import com.itheima.mvplayer.utils.AudioAsyncQueryHandler;
 
-public class AudioManager {
-    public static final String TAG = "AudioManager";
+public class MusicManager {
+    public static final String TAG = "MusicManager";
 
-    private static AudioManager mAudioManager;
+    private static MusicManager mAudioManager;
 
     private CursorAdapter mCursorAdapter;
     private AudioAsyncQueryHandler mAudioAsyncQueryHandler;
 
-    private AudioManager() {}
+    private MusicManager() {}
 
-    public static AudioManager getInstance() {
+    public static MusicManager getInstance() {
         if (mAudioManager == null) {
-            synchronized (AudioManager.class) {
+            synchronized (MusicManager.class) {
                 if (mAudioManager == null) {
-                    mAudioManager = new AudioManager();
+                    mAudioManager = new MusicManager();
                 }
             }
         }

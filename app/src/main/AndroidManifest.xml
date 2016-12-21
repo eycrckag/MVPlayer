@@ -36,7 +36,7 @@
         <activity android:name=".ui.activity.MusicPlayerActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
 
-        <service android:name=".service.MusicPlayService"/>
+        <service android:name=".service.MusicPlayerService"/>
     </application>
 
 </manifest>

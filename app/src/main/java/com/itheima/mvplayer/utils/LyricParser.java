@@ -31,6 +31,7 @@ public class LyricParser {
         if (!file.exists()) {
             file = new File(path.replace(".lrc", ".txt"));
             if (!file.exists()) {
+                //如果歌词没有找到，则直接返回一个大小为0的的非空集合
                 return lyricBeanList;
             }
         }
@@ -39,6 +40,7 @@ public class LyricParser {
             BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), "GBK"));
             String readLine = reader.readLine();
             while (readLine != null) {
+                //解析一行歌词
                 List<LyricBean> lyrics = parseLyricLine(readLine);
                 lyricBeanList.addAll(lyrics);
                 readLine = reader.readLine();
@@ -49,16 +51,22 @@ public class LyricParser {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
+        //歌词按照时间戳进行排序
         Collections.sort(lyricBeanList, new Comparator<LyricBean>() {
             @Override
             public int compare(LyricBean o1, LyricBean o2) {
-                return o1.getTimestamp() - o2.getTimestamp();
+                return o1.getTimestamp() - o2.getTimestamp();//升序排列
             }
         });
         return lyricBeanList;
     }
 
+    /**
+     * 解析一行文本，转换成歌词的bean集合
+     *
+     * @param readLine 读取的一行文本
+     * @return 解析的结果
+     */
     private static List<LyricBean> parseLyricLine(String readLine) {
         List<LyricBean> lyrics = new ArrayList<LyricBean>();
         //[01:22.04][02:35.04]寂寞的夜和谁说话
@@ -73,6 +81,9 @@ public class LyricParser {
         return lyrics;
     }
 
+    /**
+     *  解析歌词的时间戳
+     */
     private static int parseTimeStamp(String time) {
         //[01:22.04
         String[] array1 = time.split(":");

@@ -9,13 +9,13 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.itheima.mvplayer.app.Constant;
-import com.itheima.mvplayer.model.AudioManager;
+import com.itheima.mvplayer.model.MusicManager;
 
 import java.io.IOException;
 import java.util.Random;
 
-public class MusicPlayService extends Service {
-    public static final String TAG = "MusicPlayService";
+public class MusicPlayerService extends Service {
+    public static final String TAG = "MusicPlayerService";
     private MediaPlayer mMediaPlayer;
     private AudioPlayerProxy mAudioPlayerProxy;
 
@@ -49,6 +49,8 @@ public class MusicPlayService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         int position = intent.getIntExtra(Constant.Extra.AUDIO_POSITION, -1);
         if (position != POSITION_NOT_FOUND) {
+            //如果MusicPlayService正在播放的歌曲就是用户打开播放界面要播放的歌曲，则直接通知Activity已经开始播放，
+            //直接更新进度
             if (mPosition == position) {
                 notifyStartPlay();
             } else {
@@ -61,18 +63,19 @@ public class MusicPlayService extends Service {
 
 
     public void startPlay() {
+        //当开始播放一首歌曲时，如果MediaPlayer不为空，表示之前已经播放了一首歌曲，这时需要重置MediaPlayer
         if (mMediaPlayer != null) {
             mMediaPlayer.reset();
             mMediaPlayer.release();
             mMediaPlayer = null;
         }
         mMediaPlayer = new MediaPlayer();
-        String path = AudioManager.getInstance().getAudioItem(mPosition).getData();
+        String path = MusicManager.getInstance().getAudioItem(mPosition).getData();
         try {
-            mMediaPlayer.setDataSource(path);
-            mMediaPlayer.setOnPreparedListener(mOnPreparedListener);
-            mMediaPlayer.setOnCompletionListener(mOnCompletionListener);
-            mMediaPlayer.prepare();
+            mMediaPlayer.setDataSource(path);//设置歌曲路径
+            mMediaPlayer.setOnPreparedListener(mOnPreparedListener);//设置准备监听器
+            mMediaPlayer.setOnCompletionListener(mOnCompletionListener);//设置播放结束监听器
+            mMediaPlayer.prepare();//准备
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -95,7 +98,7 @@ public class MusicPlayService extends Service {
     };
 
     private void playByMode() {
-        int count = AudioManager.getInstance().getAudioCount();
+        int count = MusicManager.getInstance().getAudioCount();
         switch (mCurrentMode) {
             case PLAY_MODE_ORDER:
                 mPosition = (mPosition + 1) % count;
@@ -125,6 +128,9 @@ public class MusicPlayService extends Service {
     public class AudioPlayerProxy extends Binder {
 
 
+        /**
+         *  播放或者暂停
+         */
         public void togglePlay() {
             if (mMediaPlayer.isPlaying()) {
                 mMediaPlayer.pause();
@@ -133,19 +139,32 @@ public class MusicPlayService extends Service {
             }
         }
 
+        /**
+         * 是否正在播放
+         */
         public boolean isPlaying() {
             return mMediaPlayer.isPlaying();
         }
 
+        /**
+         *  播放下一首
+         */
         public void playNext() {
             mPosition++;
             startPlay();
         }
 
+        /**
+         *  是否播放到最后一首
+         */
         public boolean isLast() {
-            return mPosition == AudioManager.getInstance().getAudioCount() - 1;
+            return mPosition == MusicManager.getInstance().getAudioCount() - 1;
         }
 
+        /**
+         *
+         * @return
+         */
         public boolean isFirst() {
             return mPosition == 0;
         }

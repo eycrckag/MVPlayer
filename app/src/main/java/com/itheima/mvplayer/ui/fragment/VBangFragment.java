@@ -11,7 +11,7 @@ import android.widget.ListView;
 
 import com.itheima.mvplayer.R;
 import com.itheima.mvplayer.app.Constant;
-import com.itheima.mvplayer.model.AudioManager;
+import com.itheima.mvplayer.model.MusicManager;
 import com.itheima.mvplayer.ui.activity.MusicPlayerActivity;
 import com.itheima.mvplayer.ui.adapter.AudioListAdapter;
 
@@ -35,7 +35,7 @@ public class VBangFragment extends BaseFragment {
         mListView.setAdapter(mAudioListAdapter);
         mListView.setOnItemClickListener(mOnItemClickListener);
         if (hasReadExternalStoragePermission()) {
-            AudioManager.getInstance().loadAudio(getContext(), mAudioListAdapter);
+            MusicManager.getInstance().loadAudio(getContext(), mAudioListAdapter);
         } else {
             requestPermission();
         }
@@ -54,7 +54,7 @@ public class VBangFragment extends BaseFragment {
         switch (requestCode) {
             case 0:
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    AudioManager.getInstance().loadAudio(getContext(), mAudioListAdapter);
+                    MusicManager.getInstance().loadAudio(getContext(), mAudioListAdapter);
                 } else {
                     toast(R.string.read_storage_permission_deny);
                 }

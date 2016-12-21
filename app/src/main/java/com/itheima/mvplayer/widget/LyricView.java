@@ -35,8 +35,7 @@ public class LyricView extends View {
 
     private List<LyricBean> mLyrics;
 
-    private int mProgress;
-    private int mDuration;
+    private float mOffset;
 
     public LyricView(Context context) {
         this(context, null);
@@ -76,21 +75,13 @@ public class LyricView extends View {
 
     }
 
+    /**
+     * 绘制歌词
+     * @param canvas 画布
+     */
     private void drawLyrics(Canvas canvas) {
-        LyricBean lyricBean = mLyrics.get(mHighLightPosition);
-        int startTime = lyricBean.getTimestamp();
-        int endTime = 0;
-        if (mHighLightPosition == mLyrics.size() - 1) {
-            endTime = mDuration;
-        } else {
-            endTime = mLyrics.get(mHighLightPosition + 1).getTimestamp();
-        }
-        int lineDuration  = endTime - startTime;
-        int passed = mProgress - startTime;
-        float offset = passed * 1.0f / lineDuration * mLineHeight;
-
         for (int i = 0; i < mLyrics.size(); i++) {
-            //Init paint first, then measure text size
+            //初始化画笔
             if (mHighLightPosition == i) {
                 mPaint.setColor(Color.GREEN);
                 mPaint.setTextSize(mHighLightTextSize);
@@ -98,13 +89,12 @@ public class LyricView extends View {
                 mPaint.setColor(Color.WHITE);
                 mPaint.setTextSize(mNormalTextSize);
             }
+            //测量歌词文本
             String text = mLyrics.get(i).getLyric();
             mPaint.getTextBounds(text, 0, text.length(), mTextRect);
-
-
+            //计算歌词绘制的位置
             float x = mCenterX - mTextRect.width() / 2;
-            float y = mCenterY + mTextRect.height() / 2 + (i - mHighLightPosition) * mLineHeight - offset;
-
+            float y = mCenterY + mTextRect.height() / 2 + (i - mHighLightPosition) * mLineHeight - mOffset;
             canvas.drawText(text, x, y, mPaint);
         }
     }
@@ -157,20 +147,29 @@ public class LyricView extends View {
         }).start();
     }
 
+    /**
+     *
+     *  根据当前歌曲播放的进度，计算出高亮歌词的位置
+     *
+     * @param progress 当前歌曲的播放进度
+     * @param duration 歌曲的时长
+     */
     public void roll(int progress, int duration) {
-        mProgress = progress;
-        mDuration = duration;
         for (int i = 0; i < mLyrics.size(); i++) {
             int start = mLyrics.get(i).getTimestamp();
             int end = 0;
             if (i == mLyrics.size() - 1) {
-                end = duration;
+                end = duration;//如果是最后一行歌词，该行歌词的结束时间为歌曲的时长
             } else {
                 end = mLyrics.get(i + 1).getTimestamp();
             }
-
+            //判断当前播放进度是否在该行歌词内
             if (progress > start && progress <= end) {
                 mHighLightPosition = i;
+                int lineDuration  = end - start;//获取该行歌词的时长
+                int passed = progress - start;//获取当前该行歌词已播放了多长时间
+                //获取歌词的偏移量
+                mOffset = passed * 1.0f / lineDuration * mLineHeight;
                 invalidate();
                 break;
             }

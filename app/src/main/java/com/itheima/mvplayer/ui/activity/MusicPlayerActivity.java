@@ -85,8 +85,8 @@ public class MusicPlayerActivity extends BaseActivity {
 
     private void registerBroadcast() {
         IntentFilter intentFilter = new IntentFilter();
+        //监听开始播放的ACTION
         intentFilter.addAction(MusicPlayerService.ACTION_START_PLAY);
-        intentFilter.addAction(MusicPlayerService.ACTION_COMPLETE_PLAY);
         registerReceiver(mUpdateReceiver, intentFilter);
     }
 
@@ -97,20 +97,9 @@ public class MusicPlayerActivity extends BaseActivity {
             if (action.equals(MusicPlayerService.ACTION_START_PLAY)) {
                 int pos = intent.getIntExtra(Constant.Extra.AUDIO_POSITION, -1);
                 updateStartPlay(pos);
-            } else if (action.equals(MusicPlayerService.ACTION_COMPLETE_PLAY)) {
-                stopUpdateProgress();
-                updateCompletePlay();
             }
         }
     };
-
-    private void updateCompletePlay() {
-        AnimationDrawable animation = (AnimationDrawable) mIvAnimation.getBackground();
-        animation.stop();
-        mIvPlay.setBackgroundResource(R.drawable.selector_btn_audio_pause);
-        String time = StringUtils.formatDuration(mAudioPlayerProxy.getDuration()) + "/" + StringUtils.formatDuration(mAudioPlayerProxy.getDuration());
-        mTime.setText(time);
-    }
 
     private void updateStartPlay() {
         AnimationDrawable animation = (AnimationDrawable) mIvAnimation.getBackground();

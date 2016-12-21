@@ -23,8 +23,6 @@ public class MusicPlayerService extends Service {
     private int mPosition = POSITION_NOT_FOUND;
 
     public static final String ACTION_START_PLAY = "start";
-    public static final String ACTION_COMPLETE_PLAY = "complete";
-
 
     public static final int PLAY_MODE_ORDER = 0;
     public static final int PLAY_MODE_RANDOM = 1;
@@ -92,7 +90,6 @@ public class MusicPlayerService extends Service {
     private MediaPlayer.OnCompletionListener mOnCompletionListener = new MediaPlayer.OnCompletionListener() {
         @Override
         public void onCompletion(MediaPlayer mp) {
-            notifyCompletePlay();
             playByMode();
         }
     };
@@ -113,10 +110,6 @@ public class MusicPlayerService extends Service {
         startPlay();
     }
 
-    private void notifyCompletePlay() {
-        Intent intent = new Intent(ACTION_COMPLETE_PLAY);
-        sendBroadcast(intent);
-    }
 
     private void notifyStartPlay() {
         Intent intent = new Intent(ACTION_START_PLAY);

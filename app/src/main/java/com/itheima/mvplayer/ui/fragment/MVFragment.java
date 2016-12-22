@@ -59,5 +59,4 @@ public class MVFragment extends BaseFragment{
         }
     };
 
-
 }

@@ -619,19 +619,9 @@ MusicManager管理App中要用到的音乐数据，使用单例模式。
 ### 切换播放模式 ###
 	//MusicPlayerActivity
     case R.id.iv_play_mode:
-        mAudioPlayerProxy.updatePlayMode();
-        switch (mAudioPlayerProxy.getPlayMode()) {
-            case MusicPlayerService.PLAY_MODE_ORDER:
-                mIvPlayMode.setBackgroundResource(R.drawable.selector_btn_playmode_order);
-                break;
-            case MusicPlayerService.PLAY_MODE_RANDOM:
-                mIvPlayMode.setBackgroundResource(R.drawable.selector_btn_playmode_random);
-                break;
-            case MusicPlayerService.PLAY_MODE_SINGLE:
-                mIvPlayMode.setBackgroundResource(R.drawable.selector_btn_playmode_single);
-                break;
-        }
-        break;
+         mAudioPlayerProxy.updatePlayMode();
+         updatePlayModeView(mAudioPlayerProxy.getPlayMode());
+         break;
 
 	//MusicPlayerService
     public void updatePlayMode() {

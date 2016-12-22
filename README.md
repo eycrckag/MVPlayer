@@ -764,3 +764,61 @@ MusicManager管理App中要用到的音乐数据，使用单例模式。
             canvas.drawText(text, x, y, mPaint);
         }
     }
+
+# 趟坑记 #
+## 下拉刷新时切换Fragment ##
+### BUG ###
+当下拉刷新时，迅速从首页切换到MV界面，就会出现重影：
+
+![icon](img/bug_swipe_refresh.gif)
+
+### 原因 ###
+这是已知[BUG](https://code.google.com/p/android/issues/detail?id=78062)
+
+### 解决方法 ###
+在SwipeRefreshLayout外面套一层FrameLayout。
+
+	<?xml version="1.0" encoding="utf-8"?>
+	<FrameLayout
+	    xmlns:android="http://schemas.android.com/apk/res/android"
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent">
+	    <android.support.v4.widget.SwipeRefreshLayout
+	        android:id="@id/swipe_refresh"
+	        android:layout_width="match_parent"
+	        android:layout_height="match_parent">
+	
+	        <android.support.v7.widget.RecyclerView
+	            android:id="@id/recycler_view"
+	            android:layout_width="match_parent"
+	            android:layout_height="match_parent">
+	        </android.support.v7.widget.RecyclerView>
+	    </android.support.v4.widget.SwipeRefreshLayout>
+	</FrameLayout>
+
+## 第二次点击进入MV界面 ##
+### BUG ###
+![icon](img/bug_enter_mv_twice.png)
+
+### 原因 ###
+由于我们对MVFragment的做了缓存，当再次切换到MVFragment的时候，不会重新创建，
+而是调用它的restoreViewState的方法去恢复它的状态，进而调用到FragmentStatePagerAdapter的restoreState的方法，
+而此时FragmentStatePagerAdapter是一个重新创建的adapter，它内部的FragmentManager也是一个全新的对象，内部的Active的Fragment的集合为空，当然会报空指针。
+这时候有同学就说，那就缓存原来的Adapter或者原来的FragmentManager，但即使这样做，还是会出现异常：
+![icon](img/bug_enter_mv_twice_again.png)
+
+这是由于从MVFragment切换到别的Fragment的时候，会清除里面所有的子Fragment,恢复状态时再去查找对应的Fragment是找不到的。
+
+### 解决方法 ###
+重写MVAdapter里面的saveState的方法：
+
+    @Override
+    public Parcelable saveState() {
+        return null;
+    }
+
+或者restoreState的方法：
+
+    @Override
+    public void restoreState(Parcelable state, ClassLoader loader) {
+    }

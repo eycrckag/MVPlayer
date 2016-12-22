@@ -41,11 +41,8 @@ public class MVAdapter extends FragmentStatePagerAdapter {
         return mAreas.get(position).getName();
     }
 
-    /**
-     * Fix crash when switch tabs.
-     */
+
     @Override
-    public Parcelable saveState() {
-        return null;
+    public void restoreState(Parcelable state, ClassLoader loader) {
     }
 }

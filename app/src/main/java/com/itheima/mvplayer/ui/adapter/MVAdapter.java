@@ -1,5 +1,6 @@
 package com.itheima.mvplayer.ui.adapter;
 
+import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -38,5 +39,13 @@ public class MVAdapter extends FragmentStatePagerAdapter {
     @Override
     public CharSequence getPageTitle(int position) {
         return mAreas.get(position).getName();
+    }
+
+    /**
+     * Fix crash when switch tabs.
+     */
+    @Override
+    public Parcelable saveState() {
+        return null;
     }
 }

@@ -19,6 +19,7 @@ import com.itheima.mvplayer.app.Constant;
 import com.itheima.mvplayer.model.AudioItemBean;
 import com.itheima.mvplayer.model.MusicManager;
 import com.itheima.mvplayer.service.MusicPlayerService;
+import com.itheima.mvplayer.utils.SharedPreferenceUtils;
 import com.itheima.mvplayer.utils.StringUtils;
 import com.itheima.mvplayer.widget.LyricView;
 
@@ -74,6 +75,7 @@ public class MusicPlayerActivity extends BaseActivity {
         mTvTitle.setText(itemBean.getTitle());
         mTvArtist.setText(itemBean.getArtist());
         mSeekBar.setOnSeekBarChangeListener(mOnSeekBarChangeListener);
+        updatePlayModeView(SharedPreferenceUtils.getInt(this, Constant.SP.PLAY_MODE));
     }
 
     private void startService() {
@@ -186,17 +188,7 @@ public class MusicPlayerActivity extends BaseActivity {
                 break;
             case R.id.iv_play_mode:
                 mAudioPlayerProxy.updatePlayMode();
-                switch (mAudioPlayerProxy.getPlayMode()) {
-                    case MusicPlayerService.PLAY_MODE_ORDER:
-                        mIvPlayMode.setBackgroundResource(R.drawable.selector_btn_playmode_order);
-                        break;
-                    case MusicPlayerService.PLAY_MODE_RANDOM:
-                        mIvPlayMode.setBackgroundResource(R.drawable.selector_btn_playmode_random);
-                        break;
-                    case MusicPlayerService.PLAY_MODE_SINGLE:
-                        mIvPlayMode.setBackgroundResource(R.drawable.selector_btn_playmode_single);
-                        break;
-                }
+                updatePlayModeView(mAudioPlayerProxy.getPlayMode());
                 break;
             case R.id.iv_pre:
                 if (mAudioPlayerProxy.isFirst()) {
@@ -222,6 +214,20 @@ public class MusicPlayerActivity extends BaseActivity {
                 break;
             case R.id.audio_list:
                 finish();
+                break;
+        }
+    }
+
+    private void updatePlayModeView(int playMode) {
+        switch (playMode) {
+            case MusicPlayerService.PLAY_MODE_ORDER:
+                mIvPlayMode.setBackgroundResource(R.drawable.selector_btn_playmode_order);
+                break;
+            case MusicPlayerService.PLAY_MODE_RANDOM:
+                mIvPlayMode.setBackgroundResource(R.drawable.selector_btn_playmode_random);
+                break;
+            case MusicPlayerService.PLAY_MODE_SINGLE:
+                mIvPlayMode.setBackgroundResource(R.drawable.selector_btn_playmode_single);
                 break;
         }
     }

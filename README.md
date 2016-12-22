@@ -613,7 +613,10 @@ MusicManager管理App中要用到的音乐数据，使用单例模式。
         startPlay();
     }
 
-## 切换播放模式 ##
+## 播放模式 ##
+当播放歌曲结束后，我们根据播放模式来播放下一首歌曲。
+
+### 切换播放模式 ###
 	//MusicPlayerActivity
     case R.id.iv_play_mode:
         mAudioPlayerProxy.updatePlayMode();
@@ -634,6 +637,31 @@ MusicManager管理App中要用到的音乐数据，使用单例模式。
     public void updatePlayMode() {
         mCurrentMode = (mCurrentMode + 1) % 3;
     }
+
+### 播放结束后播放下一首 ###
+    private MediaPlayer.OnCompletionListener mOnCompletionListener = new MediaPlayer.OnCompletionListener() {
+        @Override
+        public void onCompletion(MediaPlayer mp) {
+            playByMode();
+        }
+    };
+
+    private void playByMode() {
+        int count = MusicManager.getInstance().getAudioCount();
+        switch (mCurrentMode) {
+            case PLAY_MODE_ORDER:
+                mPosition = (mPosition + 1) % count;
+                break;
+            case PLAY_MODE_RANDOM:
+                mPosition = new Random().nextInt(count);
+                break;
+            case PLAY_MODE_SINGLE:
+                break;
+        }
+        startPlay();
+    }
+
+
 
 ## 自定义歌词 ##
 ### 绘制单行文本 ###

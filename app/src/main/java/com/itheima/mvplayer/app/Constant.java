@@ -15,5 +15,6 @@ public class Constant {
         public static final String PUSH_NOTIFICATION = "push_notification";
         public static final String NO_WIFI_LOAD_IMAGES = "no_wifi_load_images";
         public static final String ABOUT = "about";
+        public static final String PLAY_MODE = "play_mode";
     }
 }

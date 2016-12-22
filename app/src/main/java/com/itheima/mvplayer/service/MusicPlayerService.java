@@ -6,10 +6,10 @@ import android.media.MediaPlayer;
 import android.os.Binder;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 import com.itheima.mvplayer.app.Constant;
 import com.itheima.mvplayer.model.MusicManager;
+import com.itheima.mvplayer.utils.SharedPreferenceUtils;
 
 import java.io.IOException;
 import java.util.Random;
@@ -46,6 +46,7 @@ public class MusicPlayerService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         int position = intent.getIntExtra(Constant.Extra.AUDIO_POSITION, -1);
+        mCurrentMode = SharedPreferenceUtils.getInt(getApplicationContext(), Constant.SP.PLAY_MODE);
         if (position != POSITION_NOT_FOUND) {
             //如果MusicPlayService正在播放的歌曲就是用户打开播放界面要播放的歌曲，则直接通知Activity已经开始播放，
             //直接更新进度
@@ -106,7 +107,6 @@ public class MusicPlayerService extends Service {
             case PLAY_MODE_SINGLE:
                 break;
         }
-        Log.d(TAG, "playByMode: mode" + mCurrentMode + " position " + mPosition);
         startPlay();
     }
 
@@ -195,6 +195,7 @@ public class MusicPlayerService extends Service {
 
         public void updatePlayMode() {
             mCurrentMode = (mCurrentMode + 1) % 3;
+            SharedPreferenceUtils.saveInt(getApplicationContext(), Constant.SP.PLAY_MODE, mCurrentMode);
         }
 
         public int getPlayMode() {

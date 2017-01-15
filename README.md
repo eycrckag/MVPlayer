@@ -152,65 +152,6 @@
 * 加载更多
 
 
-# OKHttp的封装 #
-## 请求 ##
-
-### 构造方法 ###
-    public MVPlayerRequest(String url, NetworkListener<T> listener) {
-        mUrl = url;
-        mNetworkListener = listener;
-        mGson = new Gson();
-    }
-### 执行网络请求 ###
-    public void execute() {
-        NetworkManager.getInstance().sendRequest(this);
-    }
-### 解析网络响应 ###
-    public T parseNetworkResponse(String result) {
-        Class c = this.getClass();
-        ParameterizedType parameterizedType = (ParameterizedType) c.getGenericSuperclass();
-        Type actualType = parameterizedType.getActualTypeArguments()[0];
-        return mGson.fromJson(result, actualType);
-    }
-
-## 回调 ##
-	public interface NetworkListener<T> {
-	
-	    void onError(String errorMsg);
-	
-	    void onSuccess(T result);
-	}
-## NetworkManager ##
-NetworkManager维护一个OkhttpClient的对象来执行网络请求。当收到网络结果后，通过绑定主线程的Handler回调到主线程。
-
-    public void sendRequest(final MVPlayerRequest mvPlayerRequest) {
-        final Request request = new Request.Builder().get().url(mvPlayerRequest.getUrl()).build();
-        mOkHttpClient.newCall(request).enqueue(new Callback() {
-            @Override
-            public void onFailure(Call call, final IOException e) {
-                mHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        mvPlayerRequest.getNetworkListener().onError(e.getLocalizedMessage());
-                    }
-                });
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                String responseString = response.body().string();
-                final Object parsedResponse =  mvPlayerRequest.parseNetworkResponse(responseString);
-                mHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        mvPlayerRequest.getNetworkListener().onSuccess(parsedResponse);
-                    }
-                });
-            }
-        });
-    }
-
-
 # 悦单 #
 ## 功能需求 ##
 * 悦单列表 （RecyclerView）

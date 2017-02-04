@@ -763,3 +763,4 @@ MusicManager管理App中要用到的音乐数据，使用单例模式。
     @Override
     public void restoreState(Parcelable state, ClassLoader loader) {
     }
+或者MVApdapter继承FragmentPagerAdapter
